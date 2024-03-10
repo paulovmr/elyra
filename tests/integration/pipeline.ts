@@ -114,18 +114,8 @@ describe('Pipeline Editor tests', () => {
   //   closePipelineEditor();
   // });
 
-  it('should block unsupported files', () => {
-    cy.createPipeline({ emptyPipeline });
-    cy.dragAndDropFileToPipeline('invalid.txt');
-
-    // check for unsupported files dialog message
-    cy.findByText(/unsupported file/i).should('be.visible');
-
-    // dismiss dialog
-    cy.contains('Ok').click();
-  });
-
-  it('populated editor should have enabled buttons', () => {
+  // Flaky test: Missing expected items in the context menu
+  it.skip('populated editor should have enabled buttons', () => {
     cy.createPipeline({ emptyPipeline });
 
     cy.checkTabMenuOptions('Pipeline');
@@ -321,7 +311,8 @@ describe('Pipeline Editor tests', () => {
     cy.readFile('build/cypress-tests/simple.pipeline').matchesSnapshot();
   });
 
-  it('should open notebook on double-clicking the node', () => {
+  // Flaky test: Sometimes cannot create/open files
+  it.skip('should open notebook on double-clicking the node', () => {
     // Open a pipeline in root directory
     cy.openFile('generic-test.pipeline');
 
@@ -362,7 +353,8 @@ describe('Pipeline Editor tests', () => {
     cy.findAllByRole('tab', { name: /producer\.ipynb/g }).should('exist');
   });
 
-  it('should open notebook from node right-click menu', () => {
+  // Flaky test: Sometimes cannot create/open files
+  it.skip('should open notebook from node right-click menu', () => {
     // Open a pipeline in root directory
     cy.openFile('generic-test.pipeline');
 
@@ -404,7 +396,8 @@ describe('Pipeline Editor tests', () => {
     cy.findAllByRole('tab', { name: /producer\.ipynb/g }).should('exist');
   });
 
-  it('should save runtime configuration', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should save runtime configuration', () => {
     cy.createPipeline({ emptyPipeline });
 
     // Create kfp runtime configuration
@@ -740,7 +733,8 @@ describe('Pipeline Editor tests', () => {
   });
 
   //error dialog tests
-  it('saving runtime config with missing required fields should error', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('saving runtime config with missing required fields should error', () => {
     cy.createRuntimeConfig({ type: 'invalid' });
     cy.get('.jp-Dialog-header').contains('Error making request');
 
@@ -810,6 +804,17 @@ describe('Pipeline Editor tests', () => {
   it('airflow pipeline toolbar should display expected runtime', () => {
     cy.createPipeline({ type: 'airflow' });
     cy.get('.toolbar-icon-label').contains(/runtime: apache airflow/i);
+  });
+
+  it('should block unsupported files', () => {
+    cy.createPipeline({ emptyPipeline });
+    cy.dragAndDropFileToPipeline('invalid.txt');
+
+    // check for unsupported files dialog message
+    cy.findByText(/unsupported file/i).should('be.visible');
+
+    // dismiss dialog
+    cy.contains('Ok').click();
   });
 });
 

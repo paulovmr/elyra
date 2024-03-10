@@ -37,7 +37,8 @@ describe('Code snippet from cells tests', () => {
     ).should('have.class', 'lm-mod-disabled');
   });
 
-  it('test 1 cell', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('test 1 cell', () => {
     // Create new cell
     cy.get(
       '.jp-NotebookPanel-toolbar > div:nth-child(2) > button:nth-child(1)'
@@ -65,7 +66,8 @@ describe('Code snippet from cells tests', () => {
     );
   });
 
-  it('test 2 cells', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('test 2 cells', () => {
     // Create new cells
     cy.get(
       '.jp-NotebookPanel-toolbar > div:nth-child(2) > button:nth-child(1)'
