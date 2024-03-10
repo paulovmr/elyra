@@ -105,7 +105,8 @@ const openFile = (fileName: string): void => {
   cy.findByText(/^open from path$/i).click({ force: true });
   cy.get('input#jp-dialog-input-id')
     .clear()
-    .type(`/${fileName}`)
+    .type(`/${fileName}`, { force: true })
     .should('have.value', `/${fileName}`);
+
   cy.get('.lm-Panel .jp-mod-accept').click();
 };
