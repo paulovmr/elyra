@@ -16,6 +16,8 @@
 
 import '@testing-library/cypress/add-commands';
 
+import 'cypress-real-events/support';
+
 import './../utils/snapshots/add-commands';
 
 Cypress.Commands.add('installRuntimeConfig', ({ type } = {}): void => {
@@ -180,18 +182,14 @@ Cypress.Commands.add('addFileToPipeline', (name: string): void => {
   cy.findByRole('menuitem', { name: /add file to pipeline/i }).click();
 });
 
-Cypress.Commands.add('dragAndDropFileToPipeline', (name: string): void => {
-  const dragItem = cy.findByRole('listitem', {
+Cypress.Commands.add('dragAndDropFileToPipeline', (name: string) => {
+  cy.findByRole('listitem', {
     name: (n, _el) => n.includes(name)
-  });
+  }).realMouseDown();
 
-  dragItem.trigger('mousedown', { button: 0 });
-
-  // drop item into canvas
   cy.get('.d3-svg-background')
-    .trigger('mousemove')
-    .trigger('mouseup', { button: 0, force: true })
-    .wait(100);
+    .realMouseMove(50, 50, { position: 'center' })
+    .realMouseUp();
 });
 
 Cypress.Commands.add('savePipeline', (): void => {

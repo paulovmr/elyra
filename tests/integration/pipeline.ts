@@ -122,7 +122,7 @@ describe('Pipeline Editor tests', () => {
     cy.findByText(/unsupported file/i).should('be.visible');
 
     // dismiss dialog
-    cy.contains('OK').click();
+    cy.contains('Ok').click();
   });
 
   it('populated editor should have enabled buttons', () => {
