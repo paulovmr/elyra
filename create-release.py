@@ -35,8 +35,8 @@ config: SimpleNamespace
 
 VERSION_REG_EX = r"(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(\.(?P<pre_release>[a-z]+)(?P<build>\d+))?"
 
-DEFAULT_GIT_ORG = "elyra-ai"
-DEFAULT_GIT_BRANCH = "main"
+DEFAULT_GIT_ORG = "opendatahub-io"
+DEFAULT_GIT_BRANCH = "dspv2"
 DEFAULT_BUILD_DIR = "build/release"
 
 
@@ -450,6 +450,7 @@ def build_release():
     print("-----------------------------------------------------------------")
 
     # Build wheels and source packages
+    sed(_source("pyproject.toml"), r'name="elyra"', 'name="odh-elyra"')
     check_run(["make", "release"], cwd=config.source_dir, capture_output=False)
 
     if not config.pre_release:
@@ -469,7 +470,7 @@ def build_server():
     print("-----------------------------------------------------------------")
 
     # update project name
-    sed(_source("pyproject.toml"), r'name="elyra"', 'name="elyra-server"')
+    sed(_source("pyproject.toml"), r'name="elyra"', 'name="odh-elyra-server"')
     sed(
         _source("pyproject.toml"),
         r'description="Elyra provides AI Centric extensions to JupyterLab"',
@@ -594,47 +595,50 @@ def prepare_extensions_release() -> None:
     print("-----------------------------------------------------------------")
 
     extensions = {
-        "elyra-code-snippet-extension": SimpleNamespace(
+        "odh-elyra-code-snippet-extension": SimpleNamespace(
             packages=["code-snippet-extension", "metadata-extension", "theme-extension"],
             description=f"The Code Snippet editor extension adds support for reusable code fragments, "
             f"making programming in JupyterLab more efficient by reducing repetitive work. "
-            f"See https://elyra.readthedocs.io/en/v{config.new_version}/user_guide/code-snippets.html",
+            f"See https://elyra.readthedocs.io/en/v{config.new_version}/user_guide/code-snippets.html."
+            f"Note: This work is for opendatahub-io/Data Science Pipeline, please use upstream elyra extension.",
         ),
-        "elyra-code-viewer-extension": SimpleNamespace(
-            packages=["code-viewer-extension"],
-            description="The Code Viewer extension adds the ability to display a given chunk of code "
-            "(string) in a transient read-only 'editor' without needing to create a file."
-            "This extension will be available in JupyterLab core in a near future release and removed "
-            "from Elyra as a standalone extension.",
-        ),
-        "elyra-pipeline-editor-extension": SimpleNamespace(
+        # "elyra-code-viewer-extension": SimpleNamespace(
+        #     packages=["code-viewer-extension"],
+        #     description="The Code Viewer extension adds the ability to display a given chunk of code "
+        #     "(string) in a transient read-only 'editor' without needing to create a file."
+        #     "This extension will be available in JupyterLab core in a near future release and removed "
+        #     "from Elyra as a standalone extension.",
+        # ),
+        "odh-elyra-pipeline-editor-extension": SimpleNamespace(
             packages=["code-viewer-extension", "pipeline-editor-extension", "metadata-extension", "theme-extension"],
             description=f"The Visual Editor Pipeline extension is used to build AI pipelines from notebooks, "
             f"Python scripts and R scripts, simplifying the conversion of multiple notebooks "
             f"or script files into batch jobs or workflows."
-            f"See https://elyra.readthedocs.io/en/v{config.new_version}/user_guide/pipelines.html",
+            f"See https://elyra.readthedocs.io/en/v{config.new_version}/user_guide/pipelines.html"
+            f"Note: This work is for opendatahub-io/Data Science Pipeline, please use upstream elyra extension.",
         ),
-        "elyra-python-editor-extension": SimpleNamespace(
+        "odh-elyra-python-editor-extension": SimpleNamespace(
             packages=["python-editor-extension", "metadata-extension", "theme-extension", "script-debugger-extension"],
             description=f"The Python Script editor extension contains support for Python files, "
             f"which can take advantage of the Hybrid Runtime Support enabling users to "
             f"locally edit, execute and debug .py scripts against local or cloud-based resources."
-            f"See https://elyra.readthedocs.io/en/v{config.new_version}/user_guide/enhanced-script-support.html",
+            f"See https://elyra.readthedocs.io/en/v{config.new_version}/user_guide/enhanced-script-support.html"
+            f"Note: This work is for opendatahub-io/Data Science Pipeline, please use upstream elyra extension.",
         ),
-        "elyra-r-editor-extension": SimpleNamespace(
-            packages=["r-editor-extension", "metadata-extension", "theme-extension", "script-debugger-extension"],
-            description=f"The R Script editor extension contains support for R files, which can take "
-            f"advantage of the Hybrid Runtime Support enabling users to locally edit .R scripts "
-            f"and execute them against local or cloud-based resources."
-            f"See https://elyra.readthedocs.io/en/v{config.new_version}/user_guide/enhanced-script-support.html",
-        ),
-        "elyra-scala-editor-extension": SimpleNamespace(
-            packages=["scala-editor-extension", "metadata-extension", "theme-extension", "script-debugger-extension"],
-            description=f"The Scala Language editor extension contains support for Scala files, which can take "
-            f"advantage of the Hybrid Runtime Support enabling users to locally edit .scala files "
-            f"and execute them against local or cloud-based resources."
-            f"See https://elyra.readthedocs.io/en/v{config.new_version}/user_guide/enhanced-script-support.html",
-        ),
+        # "elyra-r-editor-extension": SimpleNamespace(
+        #     packages=["r-editor-extension", "metadata-extension", "theme-extension", "script-debugger-extension"],
+        #     description=f"The R Script editor extension contains support for R files, which can take "
+        #     f"advantage of the Hybrid Runtime Support enabling users to locally edit .R scripts "
+        #     f"and execute them against local or cloud-based resources."
+        #     f"See https://elyra.readthedocs.io/en/v{config.new_version}/user_guide/enhanced-script-support.html",
+        # ),
+        # "elyra-scala-editor-extension": SimpleNamespace(
+        #     packages=["scala-editor-extension", "metadata-extension", "theme-extension", "script-debugger-extension"],
+        #     description=f"The Scala Language editor extension contains support for Scala files, which can take "
+        #     f"advantage of the Hybrid Runtime Support enabling users to locally edit .scala files "
+        #     f"and execute them against local or cloud-based resources."
+        #     f"See https://elyra.readthedocs.io/en/v{config.new_version}/user_guide/enhanced-script-support.html",
+        # ),
     }
 
     for extension in extensions:
@@ -652,7 +656,7 @@ def prepare_extensions_release() -> None:
         sed(setup_file, "{{package-name}}", extension)
         sed(setup_file, "{{version}}", config.new_version)
         sed(setup_file, "{{data - files}}", re.escape("('share/jupyter/labextensions', 'build/labextensions', '**')"))
-        sed(setup_file, "{{install - requires}}", f"'elyra-server=={config.new_version}',")
+        sed(setup_file, "{{install - requires}}", f"'odh-elyra-server=={config.new_version}',")
         sed(setup_file, "{{description}}", f"'{extensions[extension].description}'")
 
         for dependency in extensions[extension].packages:
@@ -755,7 +759,7 @@ def prepare_release() -> None:
     # prepare extensions
     prepare_extensions_release()
     # prepare runtime extsnsions
-    prepare_runtime_extensions_package_release()
+    # prepare_runtime_extensions_package_release()
 
 
 def publish_release(working_dir) -> None:
@@ -766,22 +770,22 @@ def publish_release(working_dir) -> None:
         f"{config.source_dir}/dist/elyra-{config.new_version}.tar.gz",
         f"{config.source_dir}/dist/elyra_server-{config.new_version}-py3-none-any.whl",
         f"{config.source_dir}/dist/elyra_server-{config.new_version}.tar.gz",
-        f"{config.work_dir}/airflow-notebook/dist/airflow_notebook-{config.new_version}-py3-none-any.whl",
-        f"{config.work_dir}/airflow-notebook/dist/airflow-notebook-{config.new_version}.tar.gz",
-        f"{config.work_dir}/kfp-notebook/dist/kfp_notebook-{config.new_version}-py3-none-any.whl",
-        f"{config.work_dir}/kfp-notebook/dist/kfp-notebook-{config.new_version}.tar.gz",
+        # f"{config.work_dir}/airflow-notebook/dist/airflow_notebook-{config.new_version}-py3-none-any.whl",
+        # f"{config.work_dir}/airflow-notebook/dist/airflow-notebook-{config.new_version}.tar.gz",
+        # f"{config.work_dir}/kfp-notebook/dist/kfp_notebook-{config.new_version}-py3-none-any.whl",
+        # f"{config.work_dir}/kfp-notebook/dist/kfp-notebook-{config.new_version}.tar.gz",
         f"{config.work_dir}/elyra-code-snippet-extension/dist/elyra_code_snippet_extension-{config.new_version}-py3-none-any.whl",
         f"{config.work_dir}/elyra-code-snippet-extension/dist/elyra-code-snippet-extension-{config.new_version}.tar.gz",
-        f"{config.work_dir}/elyra-code-viewer-extension/dist/elyra_code_viewer_extension-{config.new_version}-py3-none-any.whl",
-        f"{config.work_dir}/elyra-code-viewer-extension/dist/elyra-code-viewer-extension-{config.new_version}.tar.gz",
+        # f"{config.work_dir}/elyra-code-viewer-extension/dist/elyra_code_viewer_extension-{config.new_version}-py3-none-any.whl",
+        # f"{config.work_dir}/elyra-code-viewer-extension/dist/elyra-code-viewer-extension-{config.new_version}.tar.gz",
         f"{config.work_dir}/elyra-pipeline-editor-extension/dist/elyra_pipeline_editor_extension-{config.new_version}-py3-none-any.whl",
         f"{config.work_dir}/elyra-pipeline-editor-extension/dist/elyra-pipeline-editor-extension-{config.new_version}.tar.gz",
         f"{config.work_dir}/elyra-python-editor-extension/dist/elyra_python_editor_extension-{config.new_version}-py3-none-any.whl",
         f"{config.work_dir}/elyra-python-editor-extension/dist/elyra-python-editor-extension-{config.new_version}.tar.gz",
-        f"{config.work_dir}/elyra-r-editor-extension/dist/elyra_r_editor_extension-{config.new_version}-py3-none-any.whl",
-        f"{config.work_dir}/elyra-r-editor-extension/dist/elyra-r-editor-extension-{config.new_version}.tar.gz",
-        f"{config.work_dir}/elyra-scala-editor-extension/dist/elyra_scala_editor_extension-{config.new_version}-py3-none-any.whl",
-        f"{config.work_dir}/elyra-scala-editor-extension/dist/elyra-scala-editor-extension-{config.new_version}.tar.gz",
+        # f"{config.work_dir}/elyra-r-editor-extension/dist/elyra_r_editor_extension-{config.new_version}-py3-none-any.whl",
+        # f"{config.work_dir}/elyra-r-editor-extension/dist/elyra-r-editor-extension-{config.new_version}.tar.gz",
+        # f"{config.work_dir}/elyra-scala-editor-extension/dist/elyra_scala_editor_extension-{config.new_version}-py3-none-any.whl",
+        # f"{config.work_dir}/elyra-scala-editor-extension/dist/elyra-scala-editor-extension-{config.new_version}.tar.gz",
     ]
 
     print("-----------------------------------------------------------------")
@@ -824,12 +828,12 @@ def publish_release(working_dir) -> None:
     print("-----------------------------------------------------------------")
 
     # publish npm packages
-    print()
-    print(f"publishing npm packages")
-    check_run(
-        ["lerna", "publish", "--yes", "from-package", "--no-git-tag-version", "--no-verify-access", "--no-push"],
-        cwd=config.source_dir,
-    )
+    # print()
+    # print(f"publishing npm packages")
+    # check_run(
+    #     ["lerna", "publish", "--yes", "from-package", "--no-git-tag-version", "--no-verify-access", "--no-push"],
+    #     cwd=config.source_dir,
+    # )
 
     print("-----------------------------------------------------------------")
     print("-------------------- Pushing container images -------------------")

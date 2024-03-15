@@ -5,10 +5,10 @@ requires = [
 ]
 
 [project]
-name="elyra"
+name="odh-elyra"
 description="Elyra provides AI Centric extensions to JupyterLab"
 maintainers = [
-    {name = "Elyra Maintainers"},
+    {name = "ODH IDE Maintainers"},
 ]
 readme = "README.md"
 requires-python = ">=3.8"
@@ -72,7 +72,7 @@ dynamic = ['version']
 
 [project.urls]
 Documentation = "https://elyra.readthedocs.io/en/latest"
-Homepage = "https://github.com/elyra-ai/elyra"
+Homepage = "https://github.com/opendatahub-io/elyra"
 
 [project.optional-dependencies]
 test = [
