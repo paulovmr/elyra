@@ -1,7 +1,9 @@
 from typing import Union
+
 from kubernetes.client.models import V1PodDNSConfig
 
-class PipelineConf():
+
+class PipelineConf:
     """PipelineConf contains pipeline level settings."""
 
     def __init__(self):
@@ -44,8 +46,7 @@ class PipelineConf():
           max_num_pods: max number of total parallel pods.
         """
         if max_num_pods < 1:
-            raise ValueError(
-                'Pipeline max_num_pods set to < 1, allowed values are > 0')
+            raise ValueError("Pipeline max_num_pods set to < 1, allowed values are > 0")
 
         self.parallelism = max_num_pods
         return self

@@ -53,6 +53,7 @@ from elyra.pipeline.component_catalog import ComponentCache
 from elyra.pipeline.kfp.kfp_authentication import AuthenticationError
 from elyra.pipeline.kfp.kfp_authentication import KFPAuthenticator
 from elyra.pipeline.kfp.kfp_properties import KfpPipelineParameter
+from elyra.pipeline.kfp.PipelineConf import PipelineConf
 from elyra.pipeline.pipeline import Operation
 from elyra.pipeline.pipeline import Pipeline
 from elyra.pipeline.processor import PipelineProcessor
@@ -72,8 +73,6 @@ from elyra.pipeline.runtime_type import RuntimeProcessorType
 from elyra.util.cos import join_paths
 from elyra.util.kubernetes import sanitize_label_value
 from elyra.util.path import get_absolute_path
-
-from elyra.pipeline.kfp.PipelineConf import PipelineConf
 
 
 @unique
@@ -107,6 +106,8 @@ CRIO_VOL_DEF_MEDIUM = ""
 CRIO_VOL_MOUNT_PATH = "/opt/app-root/src"
 CRIO_VOL_WORKDIR_PATH = f"{CRIO_VOL_MOUNT_PATH}/jupyter-work-dir"
 CRIO_VOL_PYTHON_PATH = f"{CRIO_VOL_WORKDIR_PATH}/python3"
+
+
 class KfpPipelineProcessor(RuntimePipelineProcessor):
     _type = RuntimeProcessorType.KUBEFLOW_PIPELINES
     _name = "kfp"
@@ -399,7 +400,10 @@ class KfpPipelineProcessor(RuntimePipelineProcessor):
 
                 # create pipeline run (or specified pipeline version)
                 run = client.run_pipeline(
-                    experiment_id=experiment.experiment_id, job_name=job_name, pipeline_id=pipeline_id, version_id=version_id
+                    experiment_id=experiment.experiment_id,
+                    job_name=job_name,
+                    pipeline_id=pipeline_id,
+                    version_id=version_id,
                 )
 
             except Exception as ex:

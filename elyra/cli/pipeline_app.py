@@ -299,6 +299,7 @@ def validate(pipeline_path: str, runtime_config: Optional[str] = None):
 
     print_info("Pipeline validation SUCCEEDED.", [])
 
+
 def validate_timeout_option(ctx, param, value):
     """Callback for monitor-timeout parameter validation"""
     try:
