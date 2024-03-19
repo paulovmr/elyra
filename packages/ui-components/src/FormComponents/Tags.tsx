@@ -112,7 +112,7 @@ export const Tags: React.FC<ITagProps> = ({
   const inputBox =
     addingNewTag === true ? (
       <ul
-        className={`${FORM_EDITOR_TAG} tag unapplied-tag`}
+        className={`${FORM_EDITOR_TAG} jp-CellTags-Tag jp-CellTags-Unapplied`}
         key={'editor-new-tag'}
       >
         <input
@@ -134,7 +134,7 @@ export const Tags: React.FC<ITagProps> = ({
     ) : (
       <button
         onClick={(): void => setAddingNewTag(true)}
-        className={`${FORM_EDITOR_TAG} tag unapplied-tag`}
+        className={`${FORM_EDITOR_TAG} jp-CellTags-Tag jp-CellTags-Unapplied`}
       >
         Add Tag
         <addIcon.react
@@ -157,7 +157,7 @@ export const Tags: React.FC<ITagProps> = ({
                 return (
                   <button
                     onClick={handleClick}
-                    className={`${FORM_EDITOR_TAG} tag unapplied-tag`}
+                    className={`${FORM_EDITOR_TAG} jp-CellTags-Tag jp-CellTags-Unapplied`}
                     id={`editor-${tag}-${index}`}
                     key={`editor-${tag}-${index}`}
                   >
@@ -170,7 +170,7 @@ export const Tags: React.FC<ITagProps> = ({
                 return (
                   <button
                     onClick={handleClick}
-                    className={`${FORM_EDITOR_TAG} tag applied-tag`}
+                    className={`${FORM_EDITOR_TAG} jp-CellTags-Tag jp-CellTags-Applied`}
                     id={`editor-${tag}-${index}`}
                     key={`editor-${tag}-${index}`}
                   >
@@ -189,7 +189,7 @@ export const Tags: React.FC<ITagProps> = ({
                 return (
                   <button
                     onClick={handleClick}
-                    className={`${FORM_EDITOR_TAG} tag unapplied-tag`}
+                    className={`${FORM_EDITOR_TAG} jp-CellTags-Tag jp-CellTags-Unapplied`}
                     id={`editor-${tag}-${index}`}
                     key={`editor-${tag}-${index}`}
                   >
