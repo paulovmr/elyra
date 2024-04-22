@@ -32,6 +32,8 @@ from typing import List
 from typing import Optional
 from typing import Set
 from urllib.parse import urlsplit
+from urllib.request import urlopen
+from urllib.error import HTTPError
 
 from autopep8 import fix_code
 from jinja2 import Environment
@@ -43,7 +45,7 @@ from kubernetes import client as k8s_client
 from traitlets import default
 from traitlets import Unicode
 
-RUN_ID_PLACEHOLDER = "random-placeholder"
+RUN_ID_PLACEHOLDER = '{{workflow.uid}}'
 
 from elyra._version import __version__
 from elyra.metadata.schemaspaces import RuntimeImages
@@ -73,7 +75,6 @@ from elyra.pipeline.runtime_type import RuntimeProcessorType
 from elyra.util.cos import join_paths
 from elyra.util.kubernetes import sanitize_label_value
 from elyra.util.path import get_absolute_path
-
 
 @unique
 class WorkflowEngineType(Enum):
@@ -1058,11 +1059,21 @@ class KfpPipelineProcessor(RuntimePipelineProcessor):
         account whether the container will run in a CRI-O environment.
         """
         elyra_github_org = os.getenv("ELYRA_GITHUB_ORG", "elyra-ai")
-        elyra_github_branch = os.getenv("ELYRA_GITHUB_BRANCH", "main" if "dev" in __version__ else "v" + __version__)
+        elyra_github_branch = os.getenv("ELYRA_GITHUB_BRANCH", "dspv2" if "dev" in __version__ else __version__)
         elyra_bootstrap_script_url = os.getenv(
             "ELYRA_BOOTSTRAP_SCRIPT_URL",
             f"https://raw.githubusercontent.com/{elyra_github_org}/elyra/{elyra_github_branch}/elyra/kfp/bootstrapper.py",  # noqa E501
         )
+
+        if not elyra_bootstrap_script_url.startswith("file://"):
+            try:
+                urlopen(elyra_bootstrap_script_url)
+            except HTTPError as e:
+                self.log.debug(f"Error: HTTP {e.code} - {e.reason}")
+                if e.code == 404:
+                    # Fallback bootstrapper URL
+                    elyra_bootstrap_script_url = f"https://raw.githubusercontent.com/opendatahub-io/elyra/{elyra_github_branch}/elyra/kfp/bootstrapper.py"
+
         elyra_requirements_url = os.getenv(
             "ELYRA_REQUIREMENTS_URL",
             f"https://raw.githubusercontent.com/{elyra_github_org}/"
