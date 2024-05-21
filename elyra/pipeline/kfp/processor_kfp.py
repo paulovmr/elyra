@@ -43,7 +43,7 @@ from kubernetes import client as k8s_client
 from traitlets import default
 from traitlets import Unicode
 
-RUN_ID_PLACEHOLDER = "random-placeholder"
+RUN_ID_PLACEHOLDER = '{{workflow.uid}}'
 
 from elyra._version import __version__
 from elyra.metadata.schemaspaces import RuntimeImages
@@ -73,7 +73,6 @@ from elyra.pipeline.runtime_type import RuntimeProcessorType
 from elyra.util.cos import join_paths
 from elyra.util.kubernetes import sanitize_label_value
 from elyra.util.path import get_absolute_path
-
 
 @unique
 class WorkflowEngineType(Enum):
@@ -1057,12 +1056,16 @@ class KfpPipelineProcessor(RuntimePipelineProcessor):
         Compose the container command arguments for a generic component, taking into
         account whether the container will run in a CRI-O environment.
         """
-        elyra_github_org = os.getenv("ELYRA_GITHUB_ORG", "elyra-ai")
-        elyra_github_branch = os.getenv("ELYRA_GITHUB_BRANCH", "main" if "dev" in __version__ else "v" + __version__)
+
+        # NOTE: The default organization and default branch are meant for the opendatahub-io/Data-science-pipelines v2 use case 
+        # and should not be opened as PR against upstream Elyra
+        elyra_github_org = os.getenv("ELYRA_GITHUB_ORG", "opendatahub-io")
+        elyra_github_branch = os.getenv("ELYRA_GITHUB_BRANCH", "dspv2" if "dev" in __version__ else __version__)
         elyra_bootstrap_script_url = os.getenv(
             "ELYRA_BOOTSTRAP_SCRIPT_URL",
             f"https://raw.githubusercontent.com/{elyra_github_org}/elyra/{elyra_github_branch}/elyra/kfp/bootstrapper.py",  # noqa E501
         )
+
         elyra_requirements_url = os.getenv(
             "ELYRA_REQUIREMENTS_URL",
             f"https://raw.githubusercontent.com/{elyra_github_org}/"
