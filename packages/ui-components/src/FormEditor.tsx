@@ -22,7 +22,7 @@ import Form, { IChangeEvent } from '@rjsf/core';
 //import Field from '@rjsf/core';
 import {
   ArrayFieldTemplateProps,
-  FieldTemplateProps,
+  FieldTemplateProps
   //RegistryFieldsType,
 } from '@rjsf/utils';
 /*
@@ -155,7 +155,7 @@ export const FormEditor: React.FC<IFormEditorProps> = ({
   translator,
   originalData,
   allTags,
-  languageOptions,
+  languageOptions
 }) => {
   const [formData, setFormData] = React.useState(originalData ?? ({} as any));
 
@@ -163,7 +163,7 @@ export const FormEditor: React.FC<IFormEditorProps> = ({
    * Generate the rjsf uiSchema from uihints in the elyra metadata schema.
    */
   const uiSchema: any = {
-    classNames: 'elyra-formEditor',
+    classNames: 'elyra-formEditor'
   };
   for (const category in schema?.properties) {
     const properties = schema.properties[category];
@@ -176,7 +176,7 @@ export const FormEditor: React.FC<IFormEditorProps> = ({
 
   const templates: any = {
     ArrayFieldTemplate: CustomArrayTemplate,
-    FieldTemplate: CustomFieldTemplate,
+    FieldTemplate: CustomFieldTemplate
   };
 
   return (
@@ -188,7 +188,7 @@ export const FormEditor: React.FC<IFormEditorProps> = ({
         language: formData?.['Source']?.language ?? '',
         allTags: allTags,
         languageOptions: languageOptions,
-        trans: translator,
+        trans: translator
       }}
       // fields={componentRegistry}
       // FieldTemplate={(props : any) => <CustomFieldTemplate {...props} fields={props.registry.fields} />}
