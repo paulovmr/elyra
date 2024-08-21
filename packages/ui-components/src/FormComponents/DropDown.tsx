@@ -45,7 +45,7 @@ export const DropDown: React.FC<IDropDownProps> = ({
   onChange,
   placeholder,
   formData,
-  id,
+  id
 }) => {
   const label = schema.title ?? name;
   const [current, setValue] = React.useState(formData ?? defaultValue);

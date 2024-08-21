@@ -36,7 +36,7 @@ export const PasswordField: React.FC<IPassFieldProps> = (props: any) => {
         {...props}
         uiSchema={{
           ...props.uiSchema,
-          'ui:widget': showPassword ? undefined : 'password',
+          'ui:widget': showPassword ? undefined : 'password'
         }}
       />
       <button
