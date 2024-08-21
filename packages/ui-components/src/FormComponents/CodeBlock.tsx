@@ -30,7 +30,7 @@ interface ICodeBlockProps {
 }
 
 export const CodeBlock: React.FC<ICodeBlockProps> = (
-  props: ICodeBlockProps,
+  props: ICodeBlockProps
 ) => {
   const codeBlockRef = React.useRef<HTMLDivElement>(null);
   const editorRef = React.useRef<CodeEditor.IEditor>();
@@ -52,9 +52,9 @@ export const CodeBlock: React.FC<ICodeBlockProps> = (
             (props.schema.default as string[])?.join('\n'),
           mimeType: servicesRef.current.mimeTypeService.getMimeTypeByLanguage({
             name: props.formContext.language,
-            codemirror_mode: props.formContext.language,
-          }),
-        }),
+            codemirror_mode: props.formContext.language
+          })
+        })
       });
       editorRef.current?.model.sharedModel.changed.connect(handleChange);
     }
@@ -74,7 +74,7 @@ export const CodeBlock: React.FC<ICodeBlockProps> = (
       editorRef.current.model.mimeType =
         servicesRef.current.mimeTypeService.getMimeTypeByLanguage({
           name: props.formContext.language,
-          codemirror_mode: props.formContext.language,
+          codemirror_mode: props.formContext.language
         });
     }
   }, [props.formContext.language]);
