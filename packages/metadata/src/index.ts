@@ -22,12 +22,12 @@ import {
   RequestErrors,
   CodeBlock,
   TagsField,
-  PasswordField,
+  PasswordField
 } from '@elyra/ui-components';
 import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin,
-  ILabStatus,
+  ILabStatus
 } from '@jupyterlab/application';
 import { ICommandPalette, MainAreaWidget } from '@jupyterlab/apputils';
 import { IEditorServices } from '@jupyterlab/codeeditor';
@@ -36,7 +36,7 @@ import {
   textEditorIcon,
   LabIcon,
   IFormRendererRegistry,
-  IFormRenderer,
+  IFormRenderer
 } from '@jupyterlab/ui-components';
 
 import { find } from '@lumino/algorithm';
@@ -47,7 +47,7 @@ const METADATA_WIDGET_ID = 'elyra-metadata';
 
 const commandIDs = {
   openMetadata: 'elyra-metadata:open',
-  closeTabCommand: 'elyra-metadata:close',
+  closeTabCommand: 'elyra-metadata:close'
 };
 
 /**
@@ -61,7 +61,7 @@ const extension: JupyterFrontEndPlugin<void> = {
     IEditorServices,
     ILabStatus,
     IFormRendererRegistry,
-    ITranslator,
+    ITranslator
   ],
   activate: async (
     app: JupyterFrontEnd,
@@ -69,25 +69,25 @@ const extension: JupyterFrontEndPlugin<void> = {
     editorServices: IEditorServices,
     status: ILabStatus,
     componentRegistry: IFormRendererRegistry,
-    translator: ITranslator,
+    translator: ITranslator
   ) => {
     console.log('Elyra - metadata extension is activated!');
 
     componentRegistry.addRenderer(
       'code',
-      CodeBlock as unknown as IFormRenderer,
+      CodeBlock as unknown as IFormRenderer
     );
     componentRegistry.addRenderer(
       'tags',
-      TagsField as unknown as IFormRenderer,
+      TagsField as unknown as IFormRenderer
     );
     componentRegistry.addRenderer(
       'dropdown',
-      DropDown as unknown as IFormRenderer,
+      DropDown as unknown as IFormRenderer
     );
     componentRegistry.addRenderer(
       'password',
-      PasswordField as unknown as IFormRenderer,
+      PasswordField as unknown as IFormRenderer
     );
 
     const openMetadataEditor = (args: {
@@ -110,7 +110,7 @@ const extension: JupyterFrontEndPlugin<void> = {
         app.shell.widgets('main'),
         (widget: Widget, index: number) => {
           return widget.id === widgetId;
-        },
+        }
       );
       if (openWidget) {
         app.shell.activateById(widgetId);
@@ -123,7 +123,7 @@ const extension: JupyterFrontEndPlugin<void> = {
         editorServices,
         status,
         translator: translator.load('jupyterlab'),
-        componentRegistry,
+        componentRegistry
       });
       const main = new MainAreaWidget({ content: metadataEditorWidget });
       main.title.label = widgetLabel;
@@ -142,7 +142,7 @@ const extension: JupyterFrontEndPlugin<void> = {
       },
       execute: (args: any) => {
         openMetadataEditor(args);
-      },
+      }
     });
 
     const openMetadataWidget = (args: {
@@ -156,7 +156,7 @@ const extension: JupyterFrontEndPlugin<void> = {
         app,
         display_name: args.display_name,
         schemaspace: args.schemaspace,
-        icon: labIcon,
+        icon: labIcon
       });
       metadataWidget.id = widgetId;
       metadataWidget.title.icon = labIcon;
@@ -178,7 +178,7 @@ const extension: JupyterFrontEndPlugin<void> = {
         // Rank has been chosen somewhat arbitrarily to give priority
         // to the running sessions widget in the sidebar.
         openMetadataWidget(args);
-      },
+      }
     });
 
     // Add command to close metadata tab
@@ -187,7 +187,7 @@ const extension: JupyterFrontEndPlugin<void> = {
       label: 'Close Tab',
       execute: (args) => {
         const contextNode: HTMLElement | undefined = app.contextMenuHitTest(
-          (node) => !!node.dataset.id,
+          (node) => !!node.dataset.id
         );
         if (contextNode) {
           const id = contextNode.dataset['id']!;
@@ -195,18 +195,18 @@ const extension: JupyterFrontEndPlugin<void> = {
             app.shell.widgets('left'),
             (widget: Widget, index: number) => {
               return widget.id === id;
-            },
+            }
           );
           if (widget) {
             widget.dispose();
           }
         }
-      },
+      }
     });
     app.contextMenu.addItem({
       selector:
         '[data-id^="elyra-metadata:"]:not([data-id$="code-snippets"]):not([data-id$="runtimes"])',
-      command: closeTabCommand,
+      command: closeTabCommand
     });
 
     try {
@@ -228,15 +228,15 @@ const extension: JupyterFrontEndPlugin<void> = {
             label: `Manage ${title}`,
             display_name: schema.uihints.title,
             schemaspace: schema.schemaspace,
-            icon: icon,
+            icon: icon
           },
-          category: 'Elyra',
+          category: 'Elyra'
         });
       }
     } catch (error) {
       RequestErrors.serverError(error);
     }
-  },
+  }
 };
 
 export default extension;
