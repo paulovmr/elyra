@@ -15,7 +15,6 @@
 #
 from datetime import datetime
 import hashlib
-import json
 import os
 from pathlib import Path
 import re
@@ -374,9 +373,6 @@ def test_add_kubernetes_toleration(processor: KfpPipelineProcessor):
 # ---------------------------------------------------
 
 
-@pytest.mark.skip(
-    reason="This test is not compatible with KFP v2: The expected assertions cannot be verified in the generated YAML."
-)
 def test_generate_pipeline_dsl_compile_pipeline_dsl_custom_component_pipeline(
     processor: KfpPipelineProcessor, component_cache, tmpdir
 ):
@@ -492,40 +488,8 @@ def test_generate_pipeline_dsl_compile_pipeline_dsl_custom_component_pipeline(
     with open(compiled_argo_output_file) as fh:
         argo_spec = yaml.safe_load(fh.read())
 
-    assert "argoproj.io/" in argo_spec["apiVersion"]
-    pipeline_spec_annotations = json.loads(argo_spec["metadata"]["annotations"]["pipelines.kubeflow.org/pipeline_spec"])
-    assert (
-        pipeline_spec_annotations["name"] == pipeline.name
-    ), f"DSL input: {generated_argo_dsl}\nArgo output: {argo_spec}"
-    assert pipeline_spec_annotations["description"] == pipeline.description, pipeline_spec_annotations
-
-    # generate Python DSL for the Tekton workflow engine
-    generated_tekton_dsl = processor._generate_pipeline_dsl(
-        pipeline=pipeline, pipeline_name=pipeline.name, workflow_engine=WorkflowEngineType.TEKTON
-    )
-
-    assert generated_tekton_dsl is not None
-    # Generated DSL includes workflow engine specific code in the _main_ function
-    assert "compiler.TektonCompiler().compile(" in generated_tekton_dsl
-
-    compiled_tekton_output_file = Path(tmpdir) / "compiled_kfp_test_tekton.yaml"
-
-    # if the compiler discovers an issue with the generated DSL this call fails
-    processor._compile_pipeline_dsl(
-        dsl=generated_tekton_dsl,
-        workflow_engine=WorkflowEngineType.TEKTON,
-        output_file=compiled_tekton_output_file.as_posix(),
-        pipeline_conf=None,
-    )
-
-    # verify that the output file exists
-    assert compiled_tekton_output_file.is_file()
-
-    # verify the file content
-    with open(compiled_tekton_output_file) as fh:
-        tekton_spec = yaml.safe_load(fh.read())
-
-    assert "tekton.dev/" in tekton_spec["apiVersion"]
+    assert argo_spec["pipelineInfo"]["name"] == pipeline.name
+    assert argo_spec["pipelineInfo"]["description"] == pipeline.description
 
 
 @pytest.mark.parametrize(
@@ -1611,9 +1575,6 @@ def test_generate_pipeline_dsl_compile_pipeline_dsl_generic_components_with_para
         assert any(param.name == param_name and param.value == param_value for param in pipeline.parameters)
 
 
-@pytest.mark.skip(
-    reason="This test is not compatible with KFP v2: The expected assertions cannot be verified in the generated YAML."
-)
 def test_generate_pipeline_dsl_compile_pipeline_dsl_custom_components_with_parameters(
     processor: KfpPipelineProcessor, component_cache, tmpdir
 ):
@@ -1739,21 +1700,15 @@ def test_generate_pipeline_dsl_compile_pipeline_dsl_custom_components_with_param
     print(compiled_spec)
 
     # Test parameters appear as expected
-    yaml_pipeline_params = compiled_spec["spec"]["arguments"]["parameters"]
+    yaml_pipeline_params = compiled_spec["root"]["inputDefinitions"]["parameters"]
     # Only two parameters are referenced by a node in the pipeline, so only 1 should be present in YAML
     assert len(yaml_pipeline_params) == 1
     # Assert params defined in YAML correspond to those defined by the Pipeline object
-    for param_from_yaml in yaml_pipeline_params:
-        param_name, param_value = param_from_yaml.get("name"), param_from_yaml.get("value")
-        assert any(param.name == param_name and str(param.value) == param_value for param in pipeline.parameters)
-
-    yaml_node_params = compiled_spec["spec"]["templates"][0]["inputs"]["parameters"]
-    # Only two parameters are referenced by this node, so only 1 should be present as input
-    assert len(yaml_node_params) == 1
-    # Assert params defined in YAML correspond to those defined by the Pipeline object
-    for param_from_yaml in yaml_node_params:
-        param_name = param_from_yaml.get("name")
-        assert any(param.name == param_name for param in pipeline.parameters)
+    for param_from_yaml_key, param_from_yaml_value in yaml_pipeline_params.items():
+        assert any(
+            param.name == param_from_yaml_key and str(param.value) == param_from_yaml_value["defaultValue"]
+            for param in pipeline.parameters
+        )
 
 
 def test_kfp_invalid_pipeline_parameter_type():

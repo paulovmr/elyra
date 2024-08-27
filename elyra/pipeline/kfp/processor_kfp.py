@@ -905,13 +905,13 @@ class KfpPipelineProcessor(RuntimePipelineProcessor):
                 # Identify task inputs and outputs using the component spec
                 # If no data type was specified, string is assumed
                 factory_function = components.load_component_from_text(component.definition)
-                for input in factory_function.component_spec.inputs or []:
-                    sanitized_input_name = self._sanitize_param_name(input.name)
+                for input_key, input_value in (factory_function.component_spec.inputs or {}).items():
+                    sanitized_input_name = self._sanitize_param_name(input_key)
                     workflow_task["task_inputs"][sanitized_input_name] = {
                         "value": None,
                         "task_output_reference": None,
                         "pipeline_parameter_reference": None,
-                        "data_type": (input.type or "string").lower(),
+                        "data_type": (input_value.type or "string").lower(),
                     }
                     # Determine whether the value needs to be rendered in quotes
                     # in the generated DSL code. For example "my name" (string), and 34 (integer).
@@ -923,9 +923,9 @@ class KfpPipelineProcessor(RuntimePipelineProcessor):
                         "bool",
                     ]
 
-                for output in factory_function.component_spec.outputs or []:
-                    workflow_task["task_outputs"][self._sanitize_param_name(output.name)] = {
-                        "data_type": output.type,
+                for output_key, output_value in (factory_function.component_spec.outputs or {}).items():
+                    workflow_task["task_outputs"][self._sanitize_param_name(output_key)] = {
+                        "data_type": output_value.type,
                     }
 
                 # Iterate over component properties and assign values to
