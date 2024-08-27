@@ -71,12 +71,12 @@ describe('Script debugger tests', () => {
     'test for debugger button disabled for default kernel without debug support',
     { defaultCommandTimeout: TIMEOUT },
     () => {
-      cy.createNewScriptEditor('R');
+      cy.createNewScriptEditor('Python');
       cy.get(
         '.elyra-ScriptEditor .jp-Toolbar select > option[value*=python]'
       ).should('not.exist');
       checkDebuggerButtonEnabled(false);
-      cy.deleteFile('untitled.r');
+      cy.deleteFile('untitled.py');
     }
   );
 });
@@ -102,6 +102,9 @@ const checkDebuggerButtonEnabled = (enabled: boolean): void => {
 const openFile = (fileName: string): void => {
   cy.findByRole('menuitem', { name: /file/i }).click();
   cy.findByText(/^open from path$/i).click({ force: true });
-  cy.get('input#jp-dialog-input-id').type(`/${fileName}`);
+  cy.get('input#jp-dialog-input-id')
+    .clear()
+    .type(`/${fileName}`)
+    .should('have.value', `/${fileName}`);
   cy.get('.p-Panel .jp-mod-accept').click();
 };

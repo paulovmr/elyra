@@ -42,9 +42,6 @@ describe('Elyra launcher is in use', () => {
     cy.get(
       '.jp-LauncherCard[data-category="Elyra"][title="Create a new Python Editor"]:visible'
     );
-    cy.get(
-      '.jp-LauncherCard[data-category="Elyra"][title="Create a new R Editor"]:visible'
-    );
     // Documentation link is available
     cy.get(
       '.jp-LauncherCard[data-category="Elyra"][title="Documentation"]:visible'

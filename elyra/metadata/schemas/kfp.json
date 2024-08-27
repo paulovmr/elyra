@@ -114,7 +114,7 @@
           "title": "Cloud Object Storage Endpoint",
           "description": "The Cloud Object Storage endpoint",
           "type": "string",
-          "pattern": "^((?:https?:\\/\\/)?[^./]+(?:\\.[^./]+)+(?:\\/.*)?)$",
+          "pattern": "^(https?:\\/\\/)?([a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*)(:\\d+)?(\\/.*)?$",
           "uihints": {
             "category": "Cloud Object Storage",
             "ui:placeholder": "https://your-cos-service:port"
