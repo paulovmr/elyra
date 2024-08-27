@@ -116,7 +116,7 @@ def test_is_valid_label_key_valid_input():
     assert is_valid_label_key(key="p/n")
     assert is_valid_label_key(key="prefix/you.2")
     assert is_valid_label_key(key="how.sad/to-see")
-    assert is_valid_label_key(key=f"{'d' * 253} / {'n' * 63}")
+    assert is_valid_label_key(key=f"{'d' * 253}/{'n' * 63}")
 
 
 def test_is_valid_label_value_invalid_input():
