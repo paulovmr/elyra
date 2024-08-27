@@ -6,7 +6,7 @@
   "supportFile": "./tests/support/commands.ts",
   "pluginsFile": "./tests/plugins/index.ts",
   "screenshotsFolder": "./build/cypress-tests/screenshots",
-  "video": false,
+  "video": true,
   "videosFolder": "./build/cypress-tests/videos",
   "videoUploadOnPasses": false,
   "fixturesFolder": false,
