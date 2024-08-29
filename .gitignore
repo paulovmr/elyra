@@ -96,4 +96,4 @@ venv/
 
 .yarn/
 
-*_extension/labextension/
+labextension/
