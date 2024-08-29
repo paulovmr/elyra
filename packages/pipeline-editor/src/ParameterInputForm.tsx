@@ -43,7 +43,7 @@ export const ParameterInputForm: React.FC<IParameterProps> = ({
       >
         Parameters
       </label>
-      {parameters.map((param) => {
+      {parameters.map(param => {
         if (!param.name) {
           return undefined;
         }

@@ -58,14 +58,14 @@ export class SubmitFileButtonExtension<
       await context.save();
     }
 
-    const env = await ContentParser.getEnvVars(context.path).catch((error) =>
+    const env = await ContentParser.getEnvVars(context.path).catch(error =>
       RequestErrors.serverError(error)
     );
     const runtimeTypes: any = await PipelineService.getRuntimeTypes().catch(
-      (error) => RequestErrors.serverError(error)
+      error => RequestErrors.serverError(error)
     );
     const runtimes = await PipelineService.getRuntimes()
-      .then((runtimeList) => {
+      .then(runtimeList => {
         return runtimeList.filter((runtime: any) => {
           return (
             !runtime.metadata.runtime_enabled &&
@@ -75,17 +75,17 @@ export class SubmitFileButtonExtension<
           );
         });
       })
-      .catch((error) => RequestErrors.serverError(error));
-    const images = await PipelineService.getRuntimeImages().catch((error) =>
+      .catch(error => RequestErrors.serverError(error));
+    const images = await PipelineService.getRuntimeImages().catch(error =>
       RequestErrors.serverError(error)
     );
-    const schema = await PipelineService.getRuntimesSchema().catch((error) =>
+    const schema = await PipelineService.getRuntimesSchema().catch(error =>
       RequestErrors.serverError(error)
     );
 
     const runtimeData = createRuntimeData({ schema, runtimes });
 
-    if (!runtimeData.platforms.find((p) => p.configs.length > 0)) {
+    if (!runtimeData.platforms.find(p => p.configs.length > 0)) {
       const res = await RequestErrors.noMetadataError(
         'runtime',
         `run file as pipeline.`
@@ -157,7 +157,7 @@ export class SubmitFileButtonExtension<
     PipelineService.submitPipeline(
       pipeline,
       configDetails?.platform.displayName ?? ''
-    ).catch((error) => RequestErrors.serverError(error));
+    ).catch(error => RequestErrors.serverError(error));
   };
 
   createNew(editor: T): IDisposable {

@@ -57,7 +57,7 @@ class ComponentCatalogsDisplay extends MetadataDisplay<IMetadataDisplayProps> {
             .then((response: any): void => {
               this.props.updateMetadata();
             })
-            .catch((error) =>
+            .catch(error =>
               console.error(
                 'An error occurred while refreshing components from catalog:',
                 error
@@ -145,7 +145,7 @@ export class ComponentCatalogsWidget extends MetadataWidget {
       );
       this.schemas = sortedSchema.filter((schema: any) => {
         return !!this.runtimeTypes.find(
-          (r) =>
+          r =>
             schema.properties?.metadata?.properties?.runtime_type?.enum?.includes(
               r.id
             ) && r.runtime_enabled
@@ -186,7 +186,7 @@ export class ComponentCatalogsWidget extends MetadataWidget {
       .then((response: any): void => {
         this.updateMetadataAndRefresh();
       })
-      .catch((error) => handleError(error));
+      .catch(error => handleError(error));
   }
 
   renderDisplay(metadata: IMetadata[]): React.ReactElement {
@@ -202,8 +202,8 @@ export class ComponentCatalogsWidget extends MetadataWidget {
       );
     }
 
-    const filteredMetadata = metadata.filter((m) => {
-      return !!this.runtimeTypes.find((r) => m.metadata?.runtime_type === r.id);
+    const filteredMetadata = metadata.filter(m => {
+      return !!this.runtimeTypes.find(r => m.metadata?.runtime_type === r.id);
     });
 
     return (

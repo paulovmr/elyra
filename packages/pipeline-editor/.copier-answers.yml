@@ -1,0 +1,15 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.3.5
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: ''
+author_name: <author_name>
+has_binder: false
+has_settings: true
+kind: frontend
+labextension_name: '@elyra/pipeline-editor-extension'
+project_short_description: JupyterLab extension - Visual editor to build Notebook
+    pipelines
+python_name: elyra_pipeline_editor_extension
+repository: https://github.com/elyra-ai/elyra
+test: true
+

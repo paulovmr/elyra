@@ -396,14 +396,14 @@ const PipelineWrapper: React.FC<IProps> = ({
             </p>
           ),
           buttons: [Dialog.cancelButton(), Dialog.okButton()]
-        }).then(async (result) => {
+        }).then(async result => {
           isDialogAlreadyShowing.current = false;
           if (result.button.accept) {
             // proceed with migration
             console.log('migrating pipeline');
             const pipelineJSON: any = contextRef.current.model.toJSON();
             try {
-              const migratedPipeline = migrate(pipelineJSON, (pipeline) => {
+              const migratedPipeline = migrate(pipelineJSON, pipeline => {
                 // function for updating to relative paths in v2
                 // uses location of filename as expected in v1
                 for (const node of pipeline.nodes) {
@@ -592,9 +592,9 @@ const PipelineWrapper: React.FC<IProps> = ({
         });
       }
       return PipelineService.getComponentDef(type, componentId)
-        .then((res) => {
+        .then(res => {
           const nodeDef = getAllPaletteNodes(palette).find(
-            (n) => n.id === componentId
+            n => n.id === componentId
           );
           commands.execute(commandIDs.openViewer, {
             content: res.content,
@@ -602,7 +602,7 @@ const PipelineWrapper: React.FC<IProps> = ({
             label: nodeDef?.label ?? componentId
           });
         })
-        .catch((e) => RequestErrors.serverError(e));
+        .catch(e => RequestErrors.serverError(e));
     },
     [commands, palette, type]
   );
@@ -612,9 +612,7 @@ const PipelineWrapper: React.FC<IProps> = ({
       const node = pipeline.pipelines[0].nodes.find(
         (node: any) => node.id === data.selectedObjectIds[i]
       );
-      const nodeDef = getAllPaletteNodes(palette).find(
-        (n) => n.op === node?.op
-      );
+      const nodeDef = getAllPaletteNodes(palette).find(n => n.op === node?.op);
       if (node?.app_data?.component_parameters?.filename) {
         commands.execute(commandIDs.openDocManager, {
           path: PipelineService.getWorkspaceRelativeNodePath(
@@ -671,7 +669,7 @@ const PipelineWrapper: React.FC<IProps> = ({
       // TODO: Parallelize this
       const runtimeTypes = await PipelineService.getRuntimeTypes();
       const runtimes = await PipelineService.getRuntimes()
-        .then((runtimeList) => {
+        .then(runtimeList => {
           return runtimeList.filter((runtime: any) => {
             return (
               !runtime.metadata.runtime_enabled &&
@@ -681,8 +679,8 @@ const PipelineWrapper: React.FC<IProps> = ({
             );
           });
         })
-        .catch((error) => RequestErrors.serverError(error));
-      const schema = await PipelineService.getRuntimesSchema().catch((error) =>
+        .catch(error => RequestErrors.serverError(error));
+      const schema = await PipelineService.getRuntimesSchema().catch(error =>
         RequestErrors.serverError(error)
       );
 
@@ -858,7 +856,7 @@ const PipelineWrapper: React.FC<IProps> = ({
           PipelineService.submitPipeline(
             pipelineJson,
             configDetails?.platform.displayName ?? ''
-          ).catch((error) => RequestErrors.serverError(error));
+          ).catch(error => RequestErrors.serverError(error));
           break;
         case 'export':
           PipelineService.exportPipeline(
@@ -866,7 +864,7 @@ const PipelineWrapper: React.FC<IProps> = ({
             exportType,
             exportPath,
             dialogResult.value.overwrite
-          ).catch((error) => RequestErrors.serverError(error));
+          ).catch(error => RequestErrors.serverError(error));
           break;
       }
     },
@@ -882,7 +880,7 @@ const PipelineWrapper: React.FC<IProps> = ({
         Dialog.okButton({ label: 'Clear All' }),
         Dialog.okButton({ label: 'Clear Canvas' })
       ]
-    }).then((result) => {
+    }).then(result => {
       if (result.button.accept) {
         const newPipeline: any = contextRef.current.model.toJSON();
         if (newPipeline?.pipelines?.[0]?.nodes?.length > 0) {

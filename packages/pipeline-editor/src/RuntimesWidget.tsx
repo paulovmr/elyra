@@ -142,7 +142,7 @@ export class RuntimesWidget extends MetadataWidget {
   }
 
   async fetchMetadata(): Promise<any> {
-    return await PipelineService.getRuntimes().catch((error) =>
+    return await PipelineService.getRuntimes().catch(error =>
       RequestErrors.serverError(error)
     );
   }
@@ -156,7 +156,7 @@ export class RuntimesWidget extends MetadataWidget {
       );
       this.schemas = sortedSchema.filter((schema: any) => {
         return !!this.runtimeTypes.find(
-          (r) => r.id === schema.runtime_type && r.runtime_enabled
+          r => r.id === schema.runtime_type && r.runtime_enabled
         );
       });
       if (this.schemas?.length ?? 0 > 1) {
@@ -215,8 +215,8 @@ export class RuntimesWidget extends MetadataWidget {
       );
     }
 
-    const filteredMetadata = metadata.filter((m) => {
-      return !!this.runtimeTypes.find((r) => m.metadata?.runtime_type === r.id);
+    const filteredMetadata = metadata.filter(m => {
+      return !!this.runtimeTypes.find(r => m.metadata?.runtime_type === r.id);
     });
 
     return (

@@ -191,7 +191,7 @@ export const componentFetcher = async (type: string): Promise<any> => {
     }
   }
 
-  const propertiesPromises = componentList.map(async (componentID) => {
+  const propertiesPromises = componentList.map(async componentID => {
     const res =
       await RequestHandler.makeGetRequest<IComponentPropertiesResponse>(
         `elyra/pipeline/components/${type}/${componentID}/properties`
@@ -233,7 +233,7 @@ export const componentFetcher = async (type: string): Promise<any> => {
       node.app_data.image = nodeIcon;
       node.app_data.ui_data.image = nodeIcon;
 
-      const prop = properties.find((p) => p.id === node.id);
+      const prop = properties.find(p => p.id === node.id);
       node.app_data.properties = prop?.properties;
     }
   }
@@ -251,7 +251,7 @@ const updateRuntimeImages = (
     properties?.properties?.component_parameters?.properties?.runtime_image ??
     properties?.properties?.pipeline_defaults?.properties?.runtime_image;
 
-  const imageNames = (runtimeImages ?? []).map((i) => i.metadata.image_name);
+  const imageNames = (runtimeImages ?? []).map(i => i.metadata.image_name);
 
   const displayNames: { [key: string]: string } = {};
 
@@ -261,7 +261,7 @@ const updateRuntimeImages = (
 
   if (runtimeImageProperties) {
     runtimeImageProperties.enumNames = (runtimeImages ?? []).map(
-      (i) => i.display_name
+      i => i.display_name
     );
     runtimeImageProperties.enum = imageNames;
   }
