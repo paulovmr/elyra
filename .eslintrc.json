@@ -73,5 +73,9 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "ignorePatterns": [
+    "packages/pipeline-editor/elyra_pipeline_editor_extension/*",
+    "packages/theme/elyra_theme_extension/*"
+  ]
 }
