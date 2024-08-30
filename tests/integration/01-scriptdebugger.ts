@@ -76,8 +76,8 @@ describe('Script debugger tests', () => {
         '.elyra-ScriptEditor .jp-Toolbar select > option[value*=python]'
       ).should('not.exist');
       checkDebuggerButtonEnabled(false);
-      cy.deleteFile('untitled.r');
-    },
+      cy.deleteFile('untitled.py');
+    }
   );
 });
 
