@@ -77,7 +77,7 @@ describe('Script debugger tests', () => {
       ).should('not.exist');
       checkDebuggerButtonEnabled(false);
       cy.deleteFile('untitled.py');
-    },
+    }
   );
 });
 
