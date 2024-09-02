@@ -19,39 +19,43 @@ on:
   pull_request: # all branches
   schedule:
     # once a day at 3 am (PST) (10 am (UTC))
-    - cron:  '0 10 * * *'
+    - cron: '0 10 * * *'
 
 env:
   FORCE_COLOR: true
+  NODE_VERSION: 20.11.0
+  YARN_VERSION: 3.5.0
+  PYTHON_VERSION: 3.11
 
 jobs:
   prepare-yarn-cache:
     name: Prepare Cache
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20.11.0"
-      - uses: actions/cache@v3
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/cache@v4
         with:
           path: |
             node_modules
             */*/node_modules
             /home/runner/.cache/Cypress
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-      - name: Install
+      - name: Install Yarn ${{ env.YARN_VERSION }}
         run: |
-          corepack prepare yarn@3.5.0 --activate
-          yarn set version 3.5.0
+          corepack prepare yarn@${{ env.YARN_VERSION }} --activate
+          yarn set version ${{ env.YARN_VERSION }}
           yarn --version
-          yarn install && tsc -v
-          # --frozen-lockfile
+      - name: Install dependencies
+        run: |
+          yarn install
   lint-server:
     name: Lint Server
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Lint
         run: make lint-server
 
@@ -60,18 +64,24 @@ jobs:
     needs: prepare-yarn-cache
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "*"
-      - uses: actions/cache@v3
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/cache@v4
         with:
           path: |
             node_modules
             */*/node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-      - name: Install
-        run: make yarn-install
+      - name: Install Yarn ${{ env.YARN_VERSION }}
+        run: |
+          corepack prepare yarn@${{ env.YARN_VERSION }} --activate
+          yarn set version ${{ env.YARN_VERSION }}
+          yarn --version
+      - name: Install dependencies
+        run: |
+          make yarn-install
       - name: Lint
         run: make eslint-check-ui
       - name: Check format
@@ -82,9 +92,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9, "3.10", "3.11"]
+        python-version: [3.8, 3.9, '3.10', '3.11']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -111,19 +121,24 @@ jobs:
     needs: prepare-yarn-cache
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "*"
+          node-version: ${{ env.NODE_VERSION }}
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
-      - uses: actions/cache@v3
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: actions/cache@v4
         with:
           path: |
             node_modules
             */*/node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Yarn ${{ env.YARN_VERSION }}
+        run: |
+          corepack prepare yarn@${{ env.YARN_VERSION }} --activate
+          yarn set version ${{ env.YARN_VERSION }}
+          yarn --version
       - name: Build
         run: |
           make build-dependencies
@@ -139,13 +154,13 @@ jobs:
     needs: prepare-yarn-cache
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "*"
+          node-version: ${{ env.NODE_VERSION }}
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - uses: actions/cache@v3
         with:
           path: |
@@ -153,6 +168,11 @@ jobs:
             */*/node_modules
             /home/runner/.cache/Cypress
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Yarn ${{ env.YARN_VERSION }}
+        run: |
+          corepack prepare yarn@${{ env.YARN_VERSION }} --activate
+          yarn set version ${{ env.YARN_VERSION }}
+          yarn --version
       - name: Build
         run: |
           make build-dependencies
@@ -178,7 +198,7 @@ jobs:
     name: Test documentation build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build
         run: make docs
 
@@ -187,17 +207,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9, "3.10", "3.11"]
+        python-version: [3.8, 3.9, '3.10', '3.11']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Validate image environment
         run: make PYTHON_VERSION=${{ matrix.python-version }} elyra-image-env
-
 
   validate-images:
     name: Validate Images
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Validate runtime images
         run: make REMOVE_RUNTIME_IMAGE=1 validate-runtime-images
