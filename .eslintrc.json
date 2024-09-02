@@ -76,6 +76,7 @@
   },
   "ignorePatterns": [
     "packages/pipeline-editor/elyra_pipeline_editor_extension/*",
-    "packages/theme/elyra_theme_extension/*"
+    "packages/theme/elyra_theme_extension/*",
+    "packages/script-debugger/elyra_script_debugger_extension/*"
   ]
 }
