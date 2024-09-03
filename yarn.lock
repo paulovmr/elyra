@@ -3402,6 +3402,7 @@ __metadata:
   resolution: "@elyra/services@workspace:packages/services"
   dependencies:
     "@jupyterlab/apputils": ^4.1.6
+    "@jupyterlab/builder": ^4.0.6
     "@jupyterlab/coreutils": ^6.0.6
     "@jupyterlab/services": ^7.0.6
     "@jupyterlab/testutils": ^4.0.6
@@ -3447,6 +3448,7 @@ __metadata:
   resolution: "@elyra/ui-components@workspace:packages/ui-components"
   dependencies:
     "@jupyterlab/apputils": ^4.1.6
+    "@jupyterlab/builder": ^4.0.6
     "@jupyterlab/ui-components": ^4.0.6
     "@rjsf/core": ^5.1.0
     "@rjsf/validator-ajv8": ^5.17.1
