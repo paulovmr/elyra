@@ -99,9 +99,6 @@ export abstract class ScriptEditor extends DocumentWidget<
     this.kernelName = null;
     this._kernelSelectionChanged = new Signal<this, string>(this);
 
-    // Add icon to main tab
-    this.title.icon = this.model.getIcon();
-
     // Add toolbar widgets
     const saveButton = new ToolbarButton({
       icon: saveIcon,
