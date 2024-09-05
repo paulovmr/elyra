@@ -71,6 +71,7 @@ describe('Script debugger tests', () => {
     'test for debugger button disabled for default kernel without debug support',
     { defaultCommandTimeout: TIMEOUT },
     () => {
+      cy.resetJupyterLab();
       cy.createNewScriptEditor('Python');
       cy.get(
         '.elyra-ScriptEditor .jp-Toolbar select > option[value*=python]'
