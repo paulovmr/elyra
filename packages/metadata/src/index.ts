@@ -21,7 +21,6 @@ import {
   DropDown,
   RequestErrors,
   CodeBlock,
-  TagsField,
   PasswordField
 } from '@elyra/ui-components';
 import {
@@ -35,8 +34,7 @@ import { ITranslator } from '@jupyterlab/translation';
 import {
   textEditorIcon,
   LabIcon,
-  IFormRendererRegistry,
-  IFormRenderer
+  IFormRendererRegistry
 } from '@jupyterlab/ui-components';
 
 import { find } from '@lumino/algorithm';
@@ -72,23 +70,26 @@ const extension: JupyterFrontEndPlugin<void> = {
     translator: ITranslator
   ) => {
     console.log('Elyra - metadata extension is activated!');
-
-    componentRegistry.addRenderer(
-      'code',
-      CodeBlock as unknown as IFormRenderer
-    );
-    componentRegistry.addRenderer(
-      'tags',
-      TagsField as unknown as IFormRenderer
-    );
-    componentRegistry.addRenderer(
-      'dropdown',
-      DropDown as unknown as IFormRenderer
-    );
-    componentRegistry.addRenderer(
-      'password',
-      PasswordField as unknown as IFormRenderer
-    );
+    // FIXME: These renderers are not working
+    componentRegistry.addRenderer('@elyra/metadata-extension:plugin.code', {
+      fieldRenderer: (props) => {
+        return CodeBlock(props);
+      }
+    });
+    // componentRegistry.addRenderer(
+    //   '@elyra/metadata-extension:plugin.tags',
+    //   TagsField as unknown as IFormRenderer
+    // );
+    componentRegistry.addRenderer('@elyra/metadata-extension:plugin.dropdown', {
+      fieldRenderer: (props) => {
+        return DropDown(props);
+      }
+    });
+    componentRegistry.addRenderer('@elyra/metadata-extension:plugin.password', {
+      fieldRenderer: (props) => {
+        return PasswordField(props);
+      }
+    });
 
     const openMetadataEditor = (args: {
       schema: string;
