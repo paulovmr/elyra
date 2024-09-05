@@ -79,7 +79,7 @@ export abstract class ScriptEditor extends DocumentWidget<
   protected runButton: ToolbarButton;
   protected defaultKernel: string | null;
   abstract getLanguage(): string;
-  abstract getIcon(): LabIcon | string;
+  abstract getIcon(): LabIcon;
 
   /**
    * Construct a new editor widget.
@@ -98,6 +98,8 @@ export abstract class ScriptEditor extends DocumentWidget<
     this.defaultKernel = null;
     this.kernelName = null;
     this._kernelSelectionChanged = new Signal<this, string>(this);
+
+    this.title.icon = this.getIcon();
 
     // Add toolbar widgets
     const saveButton = new ToolbarButton({
