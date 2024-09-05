@@ -106,5 +106,5 @@ const openFile = (fileName: string): void => {
     .clear()
     .type(`/${fileName}`)
     .should('have.value', `/${fileName}`);
-  cy.get('.p-Panel .jp-mod-accept').click();
+  cy.get('.lm-Panel .jp-mod-accept').click();
 };
