@@ -93,4 +93,4 @@ node_modules
 
 .yarn/
 
-labextension/
+labextensions/**/labextension/*
