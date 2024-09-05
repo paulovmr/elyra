@@ -28,10 +28,7 @@ import {
   DocumentRegistry,
   DocumentWidget
 } from '@jupyterlab/docregistry';
-import {
-  IFileBrowserFactory,
-  IDefaultFileBrowser
-} from '@jupyterlab/filebrowser';
+import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
 import { FileEditor, IEditorTracker } from '@jupyterlab/fileeditor';
 import { ILauncher } from '@jupyterlab/launcher';
 import { IMainMenu } from '@jupyterlab/mainmenu';
@@ -100,7 +97,7 @@ const extension: JupyterFrontEndPlugin<void> = {
     IEditorTracker,
     ICommandPalette,
     ISettingRegistry,
-    IFileBrowserFactory
+    IDefaultFileBrowser
   ],
   optional: [ILayoutRestorer, IMainMenu, ILauncher],
   activate: (
