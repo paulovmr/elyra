@@ -324,7 +324,7 @@ Cypress.Commands.add('openHelloWorld', (fileExtension: string): void => {
 
   // Search for helloworld file and open
   cy.get('input#jp-dialog-input-id').type(`/helloworld.${fileExtension}`);
-  cy.get('.p-Panel .jp-mod-accept').click();
+  cy.get('.lm-Panel .jp-mod-accept').click();
 });
 
 // Dismiss LSP code assistant box if visible
