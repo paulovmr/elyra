@@ -34,7 +34,7 @@
     "clean": "jlpm clean:lib",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
     "clean:lintcache": "rimraf .eslintcache .stylelintcache",
-    "clean:labextension": "rimraf elyra_metadata_extension/labextension elyra_metadata_extension/_version.py",
+    "clean:labextension": "rimraf ../../../../labextensions/elyra_metadata_extension/labextension ../../../../labextensions/elyra_metadata_extension/_version.py",
     "clean:all": "jlpm clean:lib && jlpm clean:labextension && jlpm clean:lintcache",
     "eslint": "jlpm eslint:check --fix",
     "eslint:check": "eslint . --cache --ext .ts,.tsx",
@@ -71,6 +71,6 @@
   },
   "jupyterlab": {
     "extension": true,
-    "outputDir": "elyra_metadata_extension/labextension"
+    "outputDir": "../../labextensions/elyra_metadata_extension/labextension"
   }
 }
