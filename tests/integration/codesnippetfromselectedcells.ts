@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-const cellSelector =
-  'div.CodeMirror-lines[role="presentation"] > div[role="presentation"]';
-
 describe('Code snippet from cells tests', () => {
   beforeEach(() => {
     cy.resetJupyterLab();
@@ -30,13 +27,14 @@ describe('Code snippet from cells tests', () => {
   });
 
   it('test empty cell', () => {
-    cy.get(cellSelector).first().rightclick();
+    cy.get('.jp-Notebook', { timeout: 10000 }).should('have.length', 1);
+    cy.get('.jp-Cell').first().rightclick();
 
     cy.wait(2000);
 
     cy.get(
       'li.lm-Menu-item[data-command="codesnippet:save-as-snippet"]'
-    ).should('have.class', 'p-mod-disabled');
+    ).should('have.class', 'lm-mod-disabled');
   });
 
   it('test 1 cell', () => {
@@ -49,9 +47,8 @@ describe('Code snippet from cells tests', () => {
 
     populateCells();
 
-    cy.get(cellSelector).first().rightclick({
-      force: true
-    });
+    cy.get('.jp-Notebook', { timeout: 10000 }).should('have.length', 1);
+    cy.get('.jp-Cell').first().rightclick();
 
     cy.wait(2000);
 
@@ -87,7 +84,7 @@ describe('Code snippet from cells tests', () => {
         shiftKey: true
       });
 
-    cy.get('div.lm-Widget.p-Widget.jp-InputPrompt.jp-InputArea-prompt:visible')
+    cy.get('div.lm-Widget.lm-Widget.jp-InputPrompt.jp-InputArea-prompt:visible')
       .first()
       .rightclick({
         force: true
@@ -114,8 +111,12 @@ describe('Code snippet from cells tests', () => {
 
 // Populate cells
 const populateCells = (): void => {
-  cy.get('span[role="presentation"]').each((cell) => {
-    cy.get(cell).type('print("test")');
-    cy.dismissAssistant('notebook');
+  cy.get('.jp-Cell').each(($cell) => {
+    cy.wrap($cell).click();
+    cy.wrap($cell).should('have.class', 'jp-mod-selected');
+    cy.wrap($cell)
+      .find('.jp-InputArea')
+      .click()
+      .type('print("test")', { delay: 100 });
   });
 };
