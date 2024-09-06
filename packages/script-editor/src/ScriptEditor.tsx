@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { ToolbarButton, showDialog, Dialog } from '@jupyterlab/apputils';
+import { Dialog, ToolbarButton, showDialog } from '@jupyterlab/apputils';
+import { CodeEditor } from '@jupyterlab/codeeditor';
 import { DocumentRegistry, DocumentWidget } from '@jupyterlab/docregistry';
 import { FileEditor } from '@jupyterlab/fileeditor';
 import { ScrollingWidget } from '@jupyterlab/logconsole';
@@ -28,21 +29,21 @@ import {
   standardRendererFactories as initialFactories
 } from '@jupyterlab/rendermime';
 import {
+  DockPanelSvg,
+  LabIcon,
   caretDownEmptyThinIcon,
   caretUpEmptyThinIcon,
-  DockPanelSvg,
   runIcon,
   saveIcon,
-  stopIcon,
-  LabIcon
+  stopIcon
 } from '@jupyterlab/ui-components';
 
-import { Signal, ISignal } from '@lumino/signaling';
+import { ISignal, Signal } from '@lumino/signaling';
 import { BoxLayout, PanelLayout, Widget } from '@lumino/widgets';
 
 import React, { RefObject } from 'react';
 
-import { KernelDropdown, ISelect } from './KernelDropdown';
+import { ISelect, KernelDropdown } from './KernelDropdown';
 import { ScriptEditorController } from './ScriptEditorController';
 import { ScriptRunner } from './ScriptRunner';
 
@@ -69,7 +70,7 @@ export abstract class ScriptEditor extends DocumentWidget<
   private dockPanel?: DockPanelSvg;
   private outputAreaWidget?: OutputArea;
   private scrollingWidget?: ScrollingWidget<OutputArea>;
-  private model: any;
+  private model: CodeEditor.IModel;
   private emptyOutput: boolean;
   private kernelSelectorRef: RefObject<ISelect> | null;
   private controller: ScriptEditorController;
@@ -223,7 +224,7 @@ export abstract class ScriptEditor extends DocumentWidget<
       await this.runner.runScript(
         this.kernelName,
         this.context.path,
-        this.model.value.text,
+        this.model.sharedModel.getSource(),
         this.handleKernelMsg
       );
     }
@@ -432,7 +433,7 @@ export abstract class ScriptEditor extends DocumentWidget<
    * Function: Saves file editor content.
    */
   private saveFile = async (): Promise<any> => {
-    if (this.model.readOnly) {
+    if (this.context.model.readOnly) {
       return showDialog({
         title: 'Cannot Save',
         body: 'Document is read-only',
