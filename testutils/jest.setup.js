@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /* global global, require */
+require('isomorphic-fetch');
 const crypto = require('crypto');
 
 Object.defineProperty(global.self, 'crypto', {
