@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+/**
+ * @jest-environment jsdom
+ */
+
 import { JupyterServer } from '@jupyterlab/testutils';
 
 import { MetadataService } from '../metadata';
@@ -54,9 +58,10 @@ describe('@elyra/services', () => {
     describe('#getAllSchema', () => {
       it('should get all schema', async () => {
         const schemas = await MetadataService.getAllSchema();
-        const schemaNames = schemas.map((schema: any) => {
-          return schema.name;
-        });
+        const schemaNames = [''];
+        for (const schema of schemas) {
+          schemas.push(schema.name);
+        }
         const knownSchemaNames = ['code-snippet', 'runtime-image'];
         for (const schemaName of knownSchemaNames) {
           expect(schemaNames).toContain(schemaName);
@@ -68,12 +73,11 @@ describe('@elyra/services', () => {
       beforeAll(async () => {
         const existingSnippets =
           await MetadataService.getMetadata('code-snippets');
-        if (
-          existingSnippets.find((snippet: any) => {
-            return snippet.name === 'tester';
-          })
-        ) {
-          await MetadataService.deleteMetadata('code-snippet', 'tester');
+        for (const snippet of existingSnippets) {
+          if (snippet.name === 'tester') {
+            await MetadataService.deleteMetadata('code-snippet', 'tester');
+            break;
+          }
         }
       });
 

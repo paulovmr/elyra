@@ -13,5 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* global module, require */
-module.exports = require('@jupyterlab/testutils/lib/babel.config');
+/* global module */
+const babelConfig = {
+  presets: [
+    [
+      '@babel/preset-env',
+      {
+        targets: {
+          node: 'current'
+        }
+      }
+    ],
+    '@babel/preset-react',
+    '@babel/preset-typescript',
+    '@babel/plugin-proposal-class-properties',
+    '@babel/plugin-transform-modules-commonjs',
+    '@babel/plugin-transform-runtime'
+  ],
+  plugins: ['module:@babel/plugin-transform-typescript']
+};
+
+module.exports = babelConfig;
+
+//module.exports = require('@jupyterlab/testutils/lib/babel.config');
