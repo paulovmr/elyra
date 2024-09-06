@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* global module, require, __dirname */
+/* global module */
 /*module.exports = {
   testRegex: '.*.spec.tsx?$',
   transform: {
@@ -40,28 +40,35 @@
   moduleFileExtensions: ['cjs', 'js', 'json', 'jsx', 'mjs', 'node', 'ts', 'tsx']
 };
 */
-const jestJupyterLab = require('@jupyterlab/testutils/lib/jest-config');
+//const jestJupyterLab = require('@jupyterlab/testutils/lib/jest-config');
 
-/*const esModules = [
+const esModules = [
   '@codemirror',
+  '@jupyter',
   '@jupyter/ydoc',
   '@jupyterlab/',
+  '@microsoft',
+  'data-uri-to-buffer',
+  'exenv-es6',
+  'fetch-blob',
+  'formdata-polyfill',
   'lib0',
   'nanoid',
+  'node-fetch',
+  '@rjsf',
   'vscode-ws-jsonrpc',
   'y-protocols',
   'y-websocket',
   'yjs'
-].join('|');*/
+].join('|');
 
-const baseConfig = jestJupyterLab(__dirname);
+//const baseConfig = jestJupyterLab(__dirname);
 
 module.exports = {
-  ...baseConfig,
+  //...baseConfig,
   automock: false,
   testRegex: '.*.spec.tsx?$',
-  //transformIgnorePatterns: [`/node_modules/(?!${esModules}).+`],
-  transformIgnorePatterns: [`/node_modules/`],
+  transformIgnorePatterns: [`/node_modules/(?!${esModules}).+`],
   moduleNameMapper: {
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '\\.(gif|ttf|eot)$': '@jupyterlab/testutils/lib/jest-file-mock.js'
@@ -80,14 +87,13 @@ module.exports = {
     'tsx'
   ],
   transform: {
-    '^.+\\.tsx?$': 'babel-jest' /*[
-      '../../testutils/transform.js',
+    '^.+\\.(j|t)sx?$': [
       'ts-jest',
       {
         tsConfig: '../../tests/tsconfig.json'
       }
-    ]*/,
-    '^.+\\.jsx?$': 'babel-jest',
+    ],
+    //'^.+\\.jsx?$': 'babel-jest',
     '\\.svg$': '@glen/jest-raw-loader'
   }
 };
