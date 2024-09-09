@@ -819,12 +819,12 @@ describe('Pipeline Editor tests', () => {
 
 const checkEnabledToolbarButtons = (buttons: RegExp[]): void => {
   for (const button of buttons) {
-    cy.findByRole('button', { name: button }).should('not.be.disabled');
+    cy.findByRole('jp-button', { name: button }).should('not.be.disabled');
   }
 };
 
 const checkDisabledToolbarButtons = (buttons: RegExp[]): void => {
   for (const button of buttons) {
-    cy.findByRole('button', { name: button }).should('be.disabled');
+    cy.findByRole('jp-button', { name: button }).should('be.disabled');
   }
 };
