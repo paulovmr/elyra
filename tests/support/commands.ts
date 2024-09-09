@@ -308,8 +308,12 @@ Cypress.Commands.add(
   (fileExtension: string): void => {
     cy.openHelloWorld(fileExtension);
     // Ensure that the file contents are as expected
-    cy.get('span[role="presentation"]').should(($span) => {
-      expect($span.get(0).innerText).to.eq('print("Hello Elyra")');
+    cy.get('.cm-line').then((lines) => {
+      const content = [...lines]
+        .map((line) => line.innerText)
+        .join('\n')
+        .trim();
+      expect(content).to.equal('print("Hello Elyra")');
     });
 
     // Close the file editor
@@ -323,7 +327,10 @@ Cypress.Commands.add('openHelloWorld', (fileExtension: string): void => {
   cy.findByText(/^open from path$/i).click({ force: true });
 
   // Search for helloworld file and open
-  cy.get('input#jp-dialog-input-id').type(`/helloworld.${fileExtension}`);
+  cy.get('input#jp-dialog-input-id')
+    .clear()
+    .type(`/helloworld.${fileExtension}`)
+    .should('have.value', `/helloworld.${fileExtension}`);
   cy.get('.lm-Panel .jp-mod-accept').click();
 });
 
