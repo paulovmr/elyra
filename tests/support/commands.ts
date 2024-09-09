@@ -244,15 +244,15 @@ Cypress.Commands.add('checkScriptEditorToolbarContent', (): void => {
   cy.get('.elyra-ScriptEditor .jp-Toolbar');
 
   // check save button exists and icon
-  cy.get('button[title="Save file contents"]');
+  cy.get('jp-button[title="Save file contents"]');
   cy.get('svg[data-icon="ui-components:save"]');
 
   // check run button exists and icon
-  cy.get('button[title="Run"]');
+  cy.get('jp-button[title="Run"]');
   cy.get('svg[data-icon="ui-components:run"]');
 
   // check interrupt kernel button exists and icon
-  cy.get('button[title="Interrupt the kernel"]');
+  cy.get('jp-button[title="Interrupt the kernel"]');
   cy.get('svg[data-icon="ui-components:stop"]');
 
   // check select kernel dropdown exists
