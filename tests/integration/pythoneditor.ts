@@ -190,10 +190,10 @@ describe('Python Editor tests', () => {
 
 // Click Run as Pipeline button
 const clickRunAsPipelineButton = (): void => {
-  cy.get('button[title="Run file as batch"]').click();
+  cy.get('jp-button[title="Run file as batch"]').click();
 };
 
 // Click Run button
 const clickRunButton = (): void => {
-  cy.get('button.elyra-ScriptEditor-Run').click();
+  cy.get('jp-button.elyra-ScriptEditor-Run').click();
 };
