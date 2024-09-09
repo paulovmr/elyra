@@ -67,7 +67,7 @@ const extension: JupyterFrontEndPlugin<ILauncher> = {
 
     // Find the MainLogo widget in the shell and replace it with the Elyra Logo
     const widgets = app.shell.widgets('top');
-    const next = widgets.next();
+    let next = widgets.next();
 
     while (!next.done) {
       const widget = next.value;
@@ -92,6 +92,7 @@ const extension: JupyterFrontEndPlugin<ILauncher> = {
 
         break;
       }
+      next = widgets.next();
     }
 
     // Use custom Elyra launcher
