@@ -330,10 +330,15 @@ describe('Pipeline Editor tests', () => {
       cy.findByText('helloworld.ipynb').dblclick();
     });
 
-    cy.findAllByRole('tab', { name: 'helloworld.ipynb' }).should('exist');
+    cy.findAllByRole('tab', { name: /helloworld\.ipynb/g }).should('exist');
 
     // close tabs
     cy.closeTab(-1); // notebook tab
+
+    cy.get(
+      '.jp-Dialog-buttonLabel[aria-label="Discard changes to file"]'
+    ).click();
+
     cy.closeTab(-1); // pipeline tab
 
     // Open a pipeline in a subfolder
@@ -354,7 +359,7 @@ describe('Pipeline Editor tests', () => {
       cy.findByText('producer.ipynb').dblclick();
     });
 
-    cy.findAllByRole('tab', { name: 'producer.ipynb' }).should('exist');
+    cy.findAllByRole('tab', { name: /producer\.ipynb/g }).should('exist');
   });
 
   it('should open notebook from node right-click menu', () => {
@@ -367,10 +372,15 @@ describe('Pipeline Editor tests', () => {
       cy.findByRole('menuitem', { name: /open file/i }).click();
     });
 
-    cy.findAllByRole('tab', { name: 'helloworld.ipynb' }).should('exist');
+    cy.findAllByRole('tab', { name: /helloworld\.ipynb/g }).should('exist');
 
     // close tabs
     cy.closeTab(-1); // notebook tab
+
+    cy.get(
+      '.jp-Dialog-buttonLabel[aria-label="Discard changes to file"]'
+    ).click();
+
     cy.closeTab(-1); // pipeline tab
 
     // Open a pipeline in a subfolder
@@ -391,7 +401,7 @@ describe('Pipeline Editor tests', () => {
       cy.findByRole('menuitem', { name: /open file/i }).click();
     });
 
-    cy.findAllByRole('tab', { name: 'producer.ipynb' }).should('exist');
+    cy.findAllByRole('tab', { name: /producer\.ipynb/g }).should('exist');
   });
 
   it('should save runtime configuration', () => {
@@ -520,7 +530,7 @@ describe('Pipeline Editor tests', () => {
       .should('have.value', 'yaml');
 
     // actual export requires minio
-    cy.contains('OK').click();
+    cy.contains('Ok').click();
 
     // validate job was executed successfully, this can take a while in ci
     cy.findByText(/pipeline export succeeded/i, { timeout: 30000 }).should(
@@ -554,7 +564,7 @@ describe('Pipeline Editor tests', () => {
       .should('have.value', 'py');
 
     // actual export requires minio
-    cy.contains('OK').click();
+    cy.contains('Ok').click();
 
     // validate job was executed successfully, this can take a while in ci
     cy.findByText(/pipeline export succeeded/i, { timeout: 30000 }).should(
@@ -592,7 +602,7 @@ describe('Pipeline Editor tests', () => {
       .should('be.checked');
 
     // actual export requires minio
-    cy.contains('OK').click();
+    cy.contains('Ok').click();
 
     // validate job was executed successfully, this can take a while in ci
     cy.findByText(/pipeline export succeeded/i, { timeout: 30000 }).should(
@@ -629,7 +639,7 @@ describe('Pipeline Editor tests', () => {
     cy.findByLabelText(/export filename/i).type('-custom');
 
     // actual export requires minio
-    cy.contains('OK').click();
+    cy.contains('Ok').click();
 
     // validate job was executed successfully, this can take a while in ci
     cy.findByText(/pipeline export succeeded/i, { timeout: 30000 }).should(
@@ -681,6 +691,8 @@ describe('Pipeline Editor tests', () => {
 
   it('kfp pipeline should display custom components', () => {
     cy.createExampleComponentCatalog({ type: 'kfp' });
+
+    cy.reload();
 
     cy.createPipeline({ type: 'kfp', emptyPipeline });
     cy.get('.palette-flyout-category[value="examples"]').click();
@@ -744,7 +756,7 @@ describe('Pipeline Editor tests', () => {
 
     cy.findByRole('button', { name: /export pipeline/i }).click();
 
-    cy.contains('OK').click();
+    cy.contains('Ok').click();
 
     cy.get('.jp-Dialog-header').contains('Error making request');
 
@@ -773,6 +785,8 @@ describe('Pipeline Editor tests', () => {
     cy.installRuntimeConfig({ type: 'kfp' });
 
     cy.findByRole('button', { name: /export pipeline/i }).click();
+
+    cy.contains('.jp-Dialog-buttonLabel', /Save and Submit/i).click();
 
     // Validate all export options are available for kfp
     cy.findByLabelText(/runtime platform/i).select('KUBEFLOW_PIPELINES');
