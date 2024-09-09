@@ -92,7 +92,7 @@ const checkDefaultKernelSelection = (): void => {
 
 const checkDebuggerButtonEnabled = (enabled: boolean): void => {
   const buttonElem = cy.get(
-    'button.jp-DebuggerBugButton[title="Enable Debugger"]'
+    'jp-button.jp-DebuggerBugButton[title="Enable Debugger"]'
   );
 
   enabled
