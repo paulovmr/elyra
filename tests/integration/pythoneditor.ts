@@ -50,11 +50,6 @@ describe('Python Editor tests', () => {
     cy.closeTab(-1);
   });
 
-  it('open Python file with expected content', () => {
-    cy.openFileAndCheckContent('py');
-    cy.closeTab(-1);
-  });
-
   it('opens blank Python editor from menu', () => {
     cy.findByRole('menuitem', { name: /file/i }).click();
     cy.findByText(/^new$/i).click();
@@ -137,6 +132,11 @@ describe('Python Editor tests', () => {
     cy.closeTab(-1);
 
     // Close editor tab
+    cy.closeTab(-1);
+  });
+
+  it('open Python file with expected content', () => {
+    cy.openFileAndCheckContent('py');
     cy.closeTab(-1);
   });
 
