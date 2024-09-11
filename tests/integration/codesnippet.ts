@@ -51,7 +51,8 @@ describe('Code Snippet tests', () => {
     cy.get('@required-warnings').should('have.length', 2);
   });
 
-  it('should create valid code-snippet', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should create valid code-snippet', () => {
     createValidCodeSnippet(snippetName);
 
     // Metadata editor tab should not be visible
@@ -63,7 +64,8 @@ describe('Code Snippet tests', () => {
     getSnippetByName(snippetName);
   });
 
-  it('should fail to create duplicate Code Snippet', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should fail to create duplicate Code Snippet', () => {
     // create code snippet
     createValidCodeSnippet(snippetName);
 
@@ -77,7 +79,8 @@ describe('Code Snippet tests', () => {
     cy.get('button.jp-mod-accept').click();
   });
 
-  it('should trigger save / submit on pressing enter', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should trigger save / submit on pressing enter', () => {
     populateCodeSnippetFields(snippetName);
 
     cy.get('.elyra-formEditor-form-display_name').type('{enter}');
@@ -92,7 +95,8 @@ describe('Code Snippet tests', () => {
   });
 
   // Delete snippet
-  it('should delete existing Code Snippet', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should delete existing Code Snippet', () => {
     createValidCodeSnippet(snippetName);
 
     cy.wait(500);
@@ -103,7 +107,8 @@ describe('Code Snippet tests', () => {
   });
 
   // Duplicate snippet
-  it('should duplicate existing Code Snippet', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should duplicate existing Code Snippet', () => {
     createValidCodeSnippet(snippetName);
     cy.wait(500);
     let snippetRef = getSnippetByName(snippetName);
@@ -127,7 +132,8 @@ describe('Code Snippet tests', () => {
     deleteSnippet(`${snippetName}-Copy2`);
   });
 
-  it('should have visible action buttons for existing code snippet', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should have visible action buttons for existing code snippet', () => {
     createValidCodeSnippet(snippetName);
 
     const actionButtons = getActionButtonsElement(snippetName);
@@ -147,7 +153,8 @@ describe('Code Snippet tests', () => {
     });
   });
 
-  it('should display/hide code snippet content on expand/collapse button', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should display/hide code snippet content on expand/collapse button', () => {
     createValidCodeSnippet(snippetName);
 
     // Check new code snippet is displayed
@@ -176,7 +183,8 @@ describe('Code Snippet tests', () => {
     cy.get('.elyra-expandableContainer-details-visible').should('not.exist');
   });
 
-  it('should update code snippet name after editing it', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should update code snippet name after editing it', () => {
     createValidCodeSnippet(snippetName);
 
     // Find new snippet in display and click on edit button
@@ -204,7 +212,8 @@ describe('Code Snippet tests', () => {
     deleteSnippet(newSnippetName);
   });
 
-  it('should fail to insert a code snippet into unsupported widget', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should fail to insert a code snippet into unsupported widget', () => {
     createValidCodeSnippet(snippetName);
 
     // Insert snippet into launcher widget
@@ -216,7 +225,8 @@ describe('Code Snippet tests', () => {
     cy.wait(100);
   });
 
-  it('should insert a python code snippet into python editor', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should insert a python code snippet into python editor', () => {
     createValidCodeSnippet(snippetName);
 
     // Open blank python file
@@ -232,7 +242,8 @@ describe('Code Snippet tests', () => {
     cy.get('span.cm-string').contains(/test/i);
   });
 
-  it('should fail to insert a java code snippet into python editor', () => {
+  // Depends on https://issues.redhat.com/browse/RHOAIENG-12695
+  it.skip('should fail to insert a java code snippet into python editor', () => {
     createValidCodeSnippet(snippetName, 'Java');
 
     // Open blank python file
