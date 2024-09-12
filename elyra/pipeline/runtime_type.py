@@ -33,7 +33,7 @@ class RuntimeProcessorType(Enum):
     """
 
     LOCAL = "Local"
-    KUBEFLOW_PIPELINES = "Kubeflow Pipelines"
+    KUBEFLOW_PIPELINES = "Data Science"
     APACHE_AIRFLOW = "Apache Airflow"
     ARGO = "Argo"
     ######################################
