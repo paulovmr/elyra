@@ -33,18 +33,22 @@ export const CodeBlock: React.FC<FieldProps> = (props: FieldProps) => {
     };
 
     if (codeBlockRef.current !== null) {
-      editorRef.current = servicesRef.current.factoryService.newInlineEditor({
+      const content =
+        formData?.join('\n') ?? (schema.default as string[])?.join('\n');
+      const mimeType =
+        servicesRef.current.mimeTypeService.getMimeTypeByLanguage({
+          name: formContext.language,
+          codemirror_mode: formContext.language
+        });
+      const newEditor = servicesRef.current.factoryService.newInlineEditor({
         host: codeBlockRef.current,
-        model: new CodeEditor.Model({
-          sharedModel:
-            formData?.join('\n') ?? (schema.default as string[])?.join('\n'),
-          mimeType: servicesRef.current.mimeTypeService.getMimeTypeByLanguage({
-            name: formContext.language,
-            codemirror_mode: formContext.language
-          })
-        })
+        model: new CodeEditor.Model({ mimeType })
       });
-      editorRef.current?.model.sharedModel.changed.connect(handleChange);
+      if (content) {
+        newEditor.model.sharedModel.setSource(content);
+      }
+      newEditor.model.sharedModel.changed.connect(handleChange);
+      editorRef.current = newEditor;
     }
 
     return (): void => {
