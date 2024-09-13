@@ -37,15 +37,7 @@ describe('Code snippet from cells tests', () => {
     ).should('have.class', 'lm-mod-disabled');
   });
 
-  // Depends on https://issues.redhat.com/browse/RHOAIENG-12851
-  it.skip('test 1 cell', () => {
-    // Create new cell
-    cy.get(
-      '.jp-NotebookPanel-toolbar > div:nth-child(2) > button:nth-child(1)'
-    ).click();
-
-    cy.wait(2000);
-
+  it('test 1 cell', () => {
     populateCells();
 
     cy.get('.jp-Notebook', { timeout: 10000 }).should('have.length', 1);
@@ -60,17 +52,21 @@ describe('Code snippet from cells tests', () => {
     cy.wait(2000);
 
     // Verify snippet editor contents
-    cy.get('span[role="presentation"]:visible').should(
-      'have.text',
-      'print("test")'
+    cy.get('.elyra-metadataEditor .cm-editor .cm-content .cm-line').then(
+      (lines) => {
+        const content = [...lines]
+          .map((line) => line.innerText)
+          .join('\n')
+          .trim();
+        expect(content).to.equal('print("test")');
+      }
     );
   });
 
-  // Depends on https://issues.redhat.com/browse/RHOAIENG-12851
-  it.skip('test 2 cells', () => {
+  it('test 2 cells', () => {
     // Create new cells
     cy.get(
-      '.jp-NotebookPanel-toolbar > div:nth-child(2) > button:nth-child(1)'
+      '.jp-NotebookPanel-toolbar > div:nth-child(2) > jp-button:nth-child(1)'
     ).click();
 
     cy.wait(2000);
@@ -101,9 +97,16 @@ describe('Code snippet from cells tests', () => {
     cy.wait(2000);
 
     // Verify snippet editor contents
-    cy.get(
-      '.elyra-form-code > .CodeMirror > .CodeMirror-scroll span[role="presentation"]:contains("test")'
-    ).should('have.length', 2);
+    cy.get('.elyra-metadataEditor .cm-editor .cm-content .cm-line').then(
+      (lines) => {
+        const content = [...lines]
+          .map((line) => line.innerText)
+          .join('\n')
+          .trim();
+        const occurrences = (content.match(/print\("test"\)/g) || []).length;
+        expect(occurrences).to.equal(2);
+      }
+    );
   });
 });
 
