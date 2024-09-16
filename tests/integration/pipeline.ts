@@ -72,9 +72,6 @@ describe('Pipeline Editor tests', () => {
     cy.exec('elyra-metadata remove runtimes --name=kfp_test_runtime', {
       failOnNonZeroExit: false
     });
-    cy.exec('elyra-metadata remove runtimes --name=airflow_test_runtime', {
-      failOnNonZeroExit: false
-    });
 
     // delete example catalogs used for testing
     cy.exec(
@@ -400,13 +397,9 @@ describe('Pipeline Editor tests', () => {
     // Create kfp runtime configuration
     cy.createRuntimeConfig({ type: 'kfp' });
 
-    // Create airflow runtime configuration
-    cy.createRuntimeConfig({ type: 'airflow' });
-
     // validate runtimes are now available
     cy.get('#elyra-metadata\\:runtimes').within(() => {
       cy.findByText(/kfp test runtime/i).should('exist');
-      cy.findByText(/airflow test runtime/i).should('exist');
     });
   });
 

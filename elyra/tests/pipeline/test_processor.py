@@ -297,14 +297,14 @@ def processor_registry(monkeypatch, expected_runtimes) -> PipelineProcessorRegis
     "expected_runtimes",
     [
         ["local"],
-        ["airflow", "kfp"],
-        ["local", "airflow"],
+        ["kfp"],
+        ["local"],
         None,
     ],
 )
 def test_processor_registry_filtering(expected_runtimes, processor_registry):
     if expected_runtimes is None:
-        expected_runtimes = ["local", "kfp", "airflow"]
+        expected_runtimes = ["local", "kfp"]
     runtimes = processor_registry.get_all_processors()
     assert len(runtimes) == len(expected_runtimes)
     for runtime in runtimes:

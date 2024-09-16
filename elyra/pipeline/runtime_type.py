@@ -34,7 +34,6 @@ class RuntimeProcessorType(Enum):
 
     LOCAL = "Local"
     KUBEFLOW_PIPELINES = "Data Science"
-    APACHE_AIRFLOW = "Apache Airflow"
     ARGO = "Argo"
     ######################################
     # Add new entry here for each new type
@@ -77,8 +76,6 @@ class RuntimeTypeResources(object):
     ) -> "RuntimeTypeResources":
         if runtime_type == RuntimeProcessorType.KUBEFLOW_PIPELINES:
             return KubeflowPipelinesResources(runtime_enabled=runtime_enabled)
-        if runtime_type == RuntimeProcessorType.APACHE_AIRFLOW:
-            return ApacheAirflowResources(runtime_enabled=runtime_enabled)
         if runtime_type == RuntimeProcessorType.ARGO:
             return ArgoResources(runtime_enabled=runtime_enabled)
         if runtime_type == RuntimeProcessorType.LOCAL:
@@ -117,14 +114,6 @@ class ArgoResources(RuntimeTypeResources):
     type = RuntimeProcessorType.ARGO
     icon_endpoint = "static/elyra/argo.svg"
     export_file_types = [{"id": "py", "display_name": "Argo domain-specific language Python code"}]
-
-
-class ApacheAirflowResources(RuntimeTypeResources):
-    """Holds static information relative to Apache Airflow processors"""
-
-    type = RuntimeProcessorType.APACHE_AIRFLOW
-    icon_endpoint = "static/elyra/airflow.svg"
-    export_file_types = [{"id": "py", "display_name": "Airflow domain-specific language Python code"}]
 
 
 class KubeflowPipelinesResources(RuntimeTypeResources):

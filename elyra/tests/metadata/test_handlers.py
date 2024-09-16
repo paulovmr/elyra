@@ -387,7 +387,7 @@ async def test_missing_runtimes_schema(jp_fetch):
 
 async def test_get_runtimes_schemas(jp_fetch):
     # Ensure all schema for runtimes can be found
-    await _get_schemaspace_schemas(jp_fetch, "runtimes", ["kfp", "airflow"])
+    await _get_schemaspace_schemas(jp_fetch, "runtimes", ["kfp"])
 
 
 async def test_get_code_snippets_schemas(jp_fetch):

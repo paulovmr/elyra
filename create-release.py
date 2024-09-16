@@ -124,7 +124,6 @@ def update_version_to_release() -> None:
         sed(_source("README.md"), r"elyra:dev ", f"elyra:{new_version} ")
         sed(_source("etc/docker/kubeflow/README.md"), r"kf-notebook:dev", f"kf-notebook:{new_version}")
         sed(_source("docs/source/getting_started/installation.md"), r"elyra:dev ", f"elyra:{new_version} ")
-        sed(_source("docs/source/recipes/configure-airflow-as-a-runtime.md"), r"main", f"{config.tag}")
         sed(_source("docs/source/recipes/deploying-elyra-in-a-jupyterhub-environment.md"), r"dev", f"{new_version}")
         sed(_source("docs/source/recipes/using-elyra-with-kubeflow-notebook-server.md"), r"main", f"{new_version}")
 
@@ -196,12 +195,6 @@ def update_version_to_release() -> None:
         )
 
         sed(
-            _source("elyra/metadata/schemas/airflow.json"),
-            r"https://elyra.readthedocs.io/en/latest/user_guide/",
-            rf"https://elyra.readthedocs.io/en/v{new_version}/user_guide/",
-        )
-
-        sed(
             _source("elyra/metadata/schemas/kfp.json"),
             r"https://elyra.readthedocs.io/en/latest/user_guide/",
             rf"https://elyra.readthedocs.io/en/v{new_version}/user_guide/",
@@ -239,11 +232,6 @@ def update_version_to_release() -> None:
         )
         sed(
             _source("docs/source/recipes/running-elyra-in-air-gapped-environment.md"),
-            r"elyra-ai/elyra/main/elyra/airflow/bootstrapper.py",
-            rf"elyra-ai/elyra/v{new_version}/elyra/airflow/bootstrapper.py",
-        )
-        sed(
-            _source("docs/source/recipes/running-elyra-in-air-gapped-environment.md"),
             r"elyra-ai/elyra/main/etc/generic/requirements-elyra.txt",
             rf"elyra-ai/elyra/v{new_version}/etc/generic/requirements-elyra.txt",
         )
@@ -277,7 +265,6 @@ def update_version_to_dev() -> None:
         sed(_source("README.md"), rf"elyra:{new_version} ", "elyra:dev ")
         sed(_source("etc/docker/kubeflow/README.md"), rf"kf-notebook:{new_version}", "kf-notebook:dev")
         sed(_source("docs/source/getting_started/installation.md"), rf"elyra:{new_version} ", "elyra:dev ")
-        sed(_source("docs/source/recipes/configure-airflow-as-a-runtime.md"), rf"{config.tag}", "main")
         sed(_source("docs/source/recipes/deploying-elyra-in-a-jupyterhub-environment.md"), rf"{new_version}", "dev")
         sed(_source("docs/source/recipes/using-elyra-with-kubeflow-notebook-server.md"), rf"{new_version}", "main")
 
@@ -352,11 +339,6 @@ def update_version_to_dev() -> None:
         )
         sed(
             _source("docs/source/recipes/running-elyra-in-air-gapped-environment.md"),
-            rf"elyra-ai/elyra/v{new_version}/elyra/airflow/bootstrapper.py",
-            r"elyra-ai/elyra/main/elyra/airflow/bootstrapper.py",
-        )
-        sed(
-            _source("docs/source/recipes/running-elyra-in-air-gapped-environment.md"),
             rf"elyra-ai/elyra/v{new_version}/etc/generic/requirements-elyra.txt",
             r"elyra-ai/elyra/main/etc/generic/requirements-elyra.txt",
         )
@@ -377,12 +359,6 @@ def update_version_to_dev() -> None:
 
         sed(
             _source("elyra/metadata/schemas/local-file-catalog.json"),
-            rf"https://elyra.readthedocs.io/en/v{new_version}/user_guide/",
-            rf"https://elyra.readthedocs.io/en/latest/user_guide/",
-        )
-
-        sed(
-            _source("elyra/metadata/schemas/airflow.json"),
             rf"https://elyra.readthedocs.io/en/v{new_version}/user_guide/",
             rf"https://elyra.readthedocs.io/en/latest/user_guide/",
         )
@@ -674,9 +650,9 @@ def prepare_runtime_extensions_package_release() -> None:
     print("---------------- Preparing Individual Packages ------------------")
     print("-----------------------------------------------------------------")
 
-    packages = {"kfp-notebook": ["kfp>=1.6.3"], "airflow-notebook": ["pygithub", "black"]}
+    packages = {"kfp-notebook": ["kfp>=1.6.3"]}
 
-    packages_source = {"kfp-notebook": "kfp", "airflow-notebook": "airflow"}
+    packages_source = {"kfp-notebook": "kfp"}
 
     for package in packages:
         package_source_dir = os.path.join(config.work_dir, package)
