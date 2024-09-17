@@ -19,6 +19,13 @@ on:
     tags:
       - v*
   workflow_dispatch:
+
+env:
+  FORCE_COLOR: true
+  NODE_VERSION: 20.11.0
+  YARN_VERSION: 3.5.0
+  PYTHON_VERSION: 3.11
+
 jobs:
   release:
     name: Release
@@ -26,8 +33,6 @@ jobs:
     permissions:
       id-token: write
       contents: write
-    env:
-      FORCE_COLOR: "1"
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
@@ -36,7 +41,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Set up NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install Yarn ${{ env.YARN_VERSION }}
+        run: |
+          corepack prepare yarn@${{ env.YARN_VERSION }} --activate
+          yarn set version ${{ env.YARN_VERSION }}
+          yarn --version
       - name: Check version
         run: |
           set -o pipefail
