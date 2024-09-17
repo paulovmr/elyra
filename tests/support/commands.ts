@@ -31,24 +31,9 @@ Cypress.Commands.add('installRuntimeConfig', ({ type } = {}): void => {
   --cos_password=minioadmin \
   --cos_bucket=test-bucket';
 
-  const airflowRuntimeInstallCommand =
-    'elyra-metadata create runtimes \
-  --schema_name=airflow \
-  --display_name="Airflow Test Runtime" \
-  --api_endpoint=https://kubernetes-service.ibm.com/pipeline \
-  --github_repo=akchinstc/test-repo \
-  --github_branch=main \
-  --github_repo_token=xxxxxxxx \
-  --github_api_endpoint=https://api.github.com \
-  --cos_endpoint=http://0.0.0.0:9000 \
-  --cos_username=minioadmin \
-  --cos_password=minioadmin \
-  --cos_bucket=test-bucket';
-
-  cy.exec(
-    type === 'kfp' ? kfpRuntimeInstallCommand : airflowRuntimeInstallCommand,
-    { failOnNonZeroExit: false }
-  );
+  cy.exec(type === 'kfp' ? kfpRuntimeInstallCommand : '', {
+    failOnNonZeroExit: false
+  });
 });
 
 // Only used for testing filling out form for runtime metadata editor
@@ -56,16 +41,10 @@ Cypress.Commands.add('createRuntimeConfig', ({ type } = {}): void => {
   cy.findByRole('tab', { name: /runtimes/i }).click();
   cy.findByRole('button', { name: /create new runtime/i }).click();
 
-  if (type === 'kfp') {
-    cy.findByRole('menuitem', { name: /kubeflow pipelines/i }).click();
-  } else {
-    cy.findByRole('menuitem', { name: /apache airflow/i }).click();
-  }
-
   cy.findByLabelText(/^display name/i).type(`${type} Test Runtime`);
 
   if (type === 'kfp') {
-    cy.findByLabelText(/kubeflow .* endpoint\*/i).type(
+    cy.findByLabelText(/data science .* endpoint\*/i).type(
       'https://kubernetes-service.ibm.com/pipeline'
     );
   } else {
@@ -114,16 +93,9 @@ Cypress.Commands.add('createExampleComponentCatalog', ({ type } = {}): void => {
 
   cy.findByRole('tab', { name: /component catalogs/i }).click();
   cy.findByRole('button', { name: /create new component catalog/i }).click();
-
-  if (type === 'kfp') {
-    cy.findByRole('menuitem', {
-      name: /new kubeflow pipelines example components catalog/i
-    }).click();
-  } else {
-    cy.findByRole('menuitem', {
-      name: /new apache airflow example components catalog/i
-    }).click();
-  }
+  cy.findByRole('menuitem', {
+    name: /new kubeflow pipelines example components catalog/i
+  }).click();
 
   cy.findByLabelText(/^display name/i).type('Example Components');
 
@@ -144,7 +116,7 @@ Cypress.Commands.add(
       switch (type) {
         case 'kfp':
           cy.get(
-            '.jp-LauncherCard[data-category="Elyra"][title="Kubeflow Pipelines Pipeline Editor"]'
+            '.jp-LauncherCard[data-category="Elyra"][title="Data Science Pipeline Editor"]'
           ).click();
           break;
         case 'airflow':
