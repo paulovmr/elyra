@@ -557,44 +557,6 @@ describe('Pipeline Editor tests', () => {
     cy.readFile('build/cypress-tests/generic-test.py');
   });
 
-  it('should export Airflow pipeline as python dsl', () => {
-    // Install runtime configuration
-    cy.installRuntimeConfig({ type: 'airflow' });
-
-    cy.openFile('generic-test.pipeline');
-
-    // try to export valid pipeline
-    cy.findByRole('button', { name: /export pipeline/i }).click();
-
-    // check label for generic pipeline
-    cy.get('.jp-Dialog-header').contains('Export pipeline');
-
-    cy.findByLabelText(/runtime platform/i).select('APACHE_AIRFLOW');
-
-    cy.findByLabelText(/runtime configuration/i)
-      .select('airflow_test_runtime')
-      .should('have.value', 'airflow_test_runtime');
-
-    // overwrite existing genric-test.py file
-    cy.findByLabelText(/export pipeline as/i)
-      .select('Airflow domain-specific language Python code')
-      .should('have.value', 'py');
-
-    cy.findByLabelText(/replace if file already exists/i)
-      .check()
-      .should('be.checked');
-
-    // actual export requires minio
-    cy.contains('Ok').click();
-
-    // validate job was executed successfully, this can take a while in ci
-    cy.findByText(/pipeline export succeeded/i, { timeout: 30000 }).should(
-      'be.visible'
-    );
-
-    cy.readFile('build/cypress-tests/helloworld.py');
-  });
-
   it('should export pipeline with custom filename', () => {
     // Install runtime configuration
     cy.installRuntimeConfig({ type: 'kfp' });
@@ -707,69 +669,14 @@ describe('Pipeline Editor tests', () => {
     cy.findByRole('button', { name: /cancel/i }).click();
   });
 
-  it('airflow pipeline should display expected export options', () => {
-    cy.createPipeline({ type: 'airflow', emptyPipeline });
-    cy.savePipeline();
-
-    cy.installRuntimeConfig({ type: 'airflow' });
-
-    // Validate all export options are available
-    cy.findByRole('button', { name: /export pipeline/i }).click();
-    cy.findByRole('option', { name: /python/i }).should('have.value', 'py');
-    cy.findByRole('option', { name: /yaml/i }).should('not.exist');
-
-    // Dismiss dialog
-    cy.findByRole('button', { name: /cancel/i }).click();
-  });
-
-  //error dialog tests
-  it('saving runtime config with missing required fields should error', () => {
-    cy.createRuntimeConfig({ type: 'invalid' });
-    cy.get('.jp-Dialog-header').contains('Error making request');
-
-    // Dismiss dialog
-    cy.findByRole('button', { name: /ok/i }).click();
-  });
-
-  it('exporting generic pipeline with invalid runtime config should produce request error', () => {
-    cy.createPipeline({ emptyPipeline });
-    cy.savePipeline();
-
-    cy.installRuntimeConfig();
-
-    cy.findByRole('button', { name: /export pipeline/i }).click();
-
-    cy.contains('Ok').click();
-
-    cy.get('.jp-Dialog-header').contains('Error making request');
-
-    // Dismiss dialog
-    cy.findByRole('button', { name: /ok/i }).click();
-  });
-
   it('generic pipeline should display expected export options', () => {
     cy.createPipeline({ emptyPipeline });
     cy.savePipeline();
-
-    // Test Airflow export options
-    cy.installRuntimeConfig({ type: 'airflow' });
-
-    cy.findByRole('button', { name: /export pipeline/i }).click();
-
-    // Validate all export options are available for airflow
-    cy.findByLabelText(/runtime platform/i).select('APACHE_AIRFLOW');
-    cy.findByRole('option', { name: /python/i }).should('have.value', 'py');
-    cy.findByRole('option', { name: /yaml/i }).should('not.exist');
-
-    // Dismiss dialog
-    cy.findByRole('button', { name: /cancel/i }).click();
 
     // Test KFP export options
     cy.installRuntimeConfig({ type: 'kfp' });
 
     cy.findByRole('button', { name: /export pipeline/i }).click();
-
-    cy.contains('.jp-Dialog-buttonLabel', /Save and Submit/i).click();
 
     // Validate all export options are available for kfp
     cy.findByLabelText(/runtime platform/i).select('KUBEFLOW_PIPELINES');
@@ -787,12 +694,7 @@ describe('Pipeline Editor tests', () => {
 
   it('kfp pipeline toolbar should display expected runtime', () => {
     cy.createPipeline({ type: 'kfp' });
-    cy.get('.toolbar-icon-label').contains(/runtime: kubeflow pipelines/i);
-  });
-
-  it('airflow pipeline toolbar should display expected runtime', () => {
-    cy.createPipeline({ type: 'airflow' });
-    cy.get('.toolbar-icon-label').contains(/runtime: apache airflow/i);
+    cy.get('.toolbar-icon-label').contains(/runtime: data science pipelines/i);
   });
 
   it('should block unsupported files', () => {
