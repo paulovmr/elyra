@@ -1,0 +1,57 @@
+#
+# Copyright 2018-2023 Elyra Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+name: Elyra Build and Release
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    env:
+      FORCE_COLOR: "1"
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check version
+        run: |
+          set -o pipefail
+          LATEST_TAG=$(git describe --tags --match="v*")
+          if [[ "$LATEST_TAG" != "v$(cat ./elyra/_version.py | grep "__version__" | cut -d'"' -f 2)" ]]; then
+            echo "::error title='$LATEST_TAG tag does not match project version'::"
+            exit 1
+          fi
+          echo "::info title='$LATEST_TAG tag is ready to be released to PyPI' ::"
+      - name: Build package
+        run: |
+          make install
+      - name: Publish package on PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
+          print-hash: true
+          packages-dir: dist/
