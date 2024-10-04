@@ -487,7 +487,7 @@ const PipelineWrapper: React.FC<IProps> = ({
       });
 
       if (res.button.accept && res.value.length) {
-        return res.value.map((v: any) => v.path);
+        return res.value;
       }
     } else {
       const res = await showBrowseFileDialog(browserFactory.model.manager, {
@@ -505,7 +505,7 @@ const PipelineWrapper: React.FC<IProps> = ({
       if (res.button.accept && res.value.length) {
         const file = PipelineService.getPipelineRelativeNodePath(
           contextRef.current.path,
-          res.value[0].path
+          res.value[0]
         );
         return [file];
       }
