@@ -135,7 +135,9 @@
           "op": "execute-python-node",
           "app_data": {
             "component_parameters": {
-              "dependencies": [],
+              "dependencies": [
+                "setup.txt"
+              ],
               "include_subdirectories": false,
               "outputs": [],
               "env_vars": [],

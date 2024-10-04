@@ -229,16 +229,16 @@ export const showBrowseFileDialog = async (
   dialog.addClass(BROWSE_FILE_CLASS);
   document.body.className += ` ${BROWSE_FILE_OPEN_CLASS}`;
 
-  return dialog.launch().then((result: any) => {
+  return dialog.launch().then((result: Dialog.IResult<string[]>) => {
     document.body.className = document.body.className
       .replace(BROWSE_FILE_OPEN_CLASS, '')
       .trim();
-    if (options.rootPath && result.button.accept && result.value.length) {
+    if (options.rootPath && result.button.accept && result.value?.length) {
       const relativeToPath = options.rootPath.endsWith('/')
         ? options.rootPath
         : options.rootPath + '/';
-      result.value.forEach((val: any) => {
-        val.path = val.path.replace(relativeToPath, '');
+      result.value = result.value.map((val: string) => {
+        return val.replace(relativeToPath, '');
       });
     }
 
