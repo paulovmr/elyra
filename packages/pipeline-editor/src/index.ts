@@ -76,6 +76,32 @@ const createRemoteIcon = async ({
   return new LabIcon({ name, svgstr });
 };
 
+export const getEmptyPipelineJson = (runtime_type: string | undefined) => {
+  return {
+    doc_type: 'pipeline',
+    version: '3.0',
+    json_schema:
+      'http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json',
+    id: 'elyra-auto-generated-pipeline',
+    primary_pipeline: 'primary',
+    pipelines: [
+      {
+        id: 'primary',
+        nodes: [],
+        app_data: {
+          ui_data: {
+            comments: []
+          },
+          version: PIPELINE_CURRENT_VERSION,
+          runtime_type
+        },
+        runtime_ref: ''
+      }
+    ],
+    schemas: []
+  };
+};
+
 /**
  * Initialization data for the pipeline-editor-extension extension.
  */
@@ -236,29 +262,7 @@ const extension: JupyterFrontEndPlugin<void> = {
             const runtime_type =
               platformId === 'LOCAL' ? undefined : platformId;
 
-            const pipelineJson = {
-              doc_type: 'pipeline',
-              version: '3.0',
-              json_schema:
-                'http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json',
-              id: 'elyra-auto-generated-pipeline',
-              primary_pipeline: 'primary',
-              pipelines: [
-                {
-                  id: 'primary',
-                  nodes: [],
-                  app_data: {
-                    ui_data: {
-                      comments: []
-                    },
-                    version: PIPELINE_CURRENT_VERSION,
-                    runtime_type
-                  },
-                  runtime_ref: ''
-                }
-              ],
-              schemas: []
-            };
+            const pipelineJson = getEmptyPipelineJson(runtime_type);
             const newWidget = await app.commands.execute(
               commandIDs.openDocManager,
               {
