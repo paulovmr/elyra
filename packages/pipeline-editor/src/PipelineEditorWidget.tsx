@@ -86,6 +86,8 @@ import {
 } from './runtime-utils';
 import { theme } from './theme';
 
+import { getEmptyPipelineJson } from './index';
+
 const PIPELINE_CLASS = 'elyra-PipelineEditor';
 
 export const commandIDs = {
@@ -170,10 +172,17 @@ class PipelineEditorWidget extends ReactWidget {
     this.context = options.context;
     this.settings = options.settings;
     let nullPipeline = this.context.model.toJSON() === null;
+
     this.context.model.contentChanged.connect(() => {
       if (nullPipeline) {
         nullPipeline = false;
         this.update();
+      }
+    });
+    this.context.fileChanged.connect(() => {
+      if (this.context.model.toJSON() === null) {
+        const pipelineJson = getEmptyPipelineJson(undefined);
+        this.context.model.fromString(JSON.stringify(pipelineJson));
       }
     });
   }
