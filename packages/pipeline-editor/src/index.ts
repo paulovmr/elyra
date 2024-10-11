@@ -379,6 +379,7 @@ const extension: JupyterFrontEndPlugin<void> = {
       schemaspace: RUNTIMES_SCHEMASPACE,
       icon: runtimesIcon,
       titleContext: 'runtime configuration',
+      addLabel: 'runtime configuration',
       appendToTitle: true
     });
     const runtimesWidgetID = `elyra-metadata:${RUNTIMES_SCHEMASPACE}`;
@@ -394,7 +395,8 @@ const extension: JupyterFrontEndPlugin<void> = {
       display_name: 'Runtime Images',
       schemaspace: RUNTIME_IMAGES_SCHEMASPACE,
       icon: containerIcon,
-      titleContext: 'runtime image'
+      titleContext: '',
+      addLabel: 'runtime image'
     });
     const runtimeImagesWidgetID = `elyra-metadata:${RUNTIME_IMAGES_SCHEMASPACE}`;
     runtimeImagesWidget.id = runtimeImagesWidgetID;
@@ -409,7 +411,8 @@ const extension: JupyterFrontEndPlugin<void> = {
       display_name: 'Component Catalogs', // TODO: This info should come from the server for all schemaspaces
       schemaspace: COMPONENT_CATALOGS_SCHEMASPACE,
       icon: componentCatalogIcon,
-      titleContext: 'component catalog',
+      titleContext: '',
+      addLabel: 'component catalog',
       refreshCallback: (): void => {
         app.commands.execute(commandIDs.refreshPalette);
       }

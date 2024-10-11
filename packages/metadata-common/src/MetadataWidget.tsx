@@ -346,6 +346,7 @@ export interface IMetadataWidgetProps {
   icon: LabIcon;
   titleContext?: string;
   appendToTitle?: boolean;
+  addLabel?: string;
 }
 
 /**
@@ -356,6 +357,7 @@ export class MetadataWidget extends ReactWidget {
   props: IMetadataWidgetProps;
   schemas?: IDictionary<any>[];
   titleContext?: string;
+  addLabel?: string;
   refreshButtonTooltip?: string;
 
   constructor(props: IMetadataWidgetProps) {
@@ -365,6 +367,7 @@ export class MetadataWidget extends ReactWidget {
     this.props = props;
     this.renderSignal = new Signal<this, any>(this);
     this.titleContext = props.titleContext;
+    this.addLabel = props.addLabel;
     this.fetchMetadata = this.fetchMetadata.bind(this);
     this.getSchemas = this.getSchemas.bind(this);
     this.updateMetadata = this.updateMetadata.bind(this);
@@ -392,6 +395,7 @@ export class MetadataWidget extends ReactWidget {
               schema: schema.name,
               title: schema.title,
               titleContext: this.props.titleContext,
+              addLabel: this.props.addLabel,
               appendToTitle: this.props.appendToTitle
             } as any
           });
@@ -531,7 +535,7 @@ export class MetadataWidget extends ReactWidget {
                       this.props.app.contextMenu.open(event);
                     }
               }
-              title={`Create new ${this.titleContext}`}
+              title={`Create new ${this.addLabel}`}
             >
               <addIcon.react tag="span" elementPosition="center" width="16px" />
             </button>
