@@ -13,12 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-name: Elyra Build and Release
+name: Elyra Release - Build
 on:
-  push:
-    tags:
-      - v*
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      dry_run:
+        type: boolean
+        required: true
+      base_ref:
+        type: string
+        required: true
 
 env:
   FORCE_COLOR: true
@@ -37,6 +41,7 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.base_ref }}
           fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -52,6 +57,7 @@ jobs:
           yarn set version ${{ env.YARN_VERSION }}
           yarn --version
       - name: Check version
+        if: ${{ !inputs.dry_run && github.repository_owner == 'opendatahub-io' }}
         run: |
           set -o pipefail
           LATEST_TAG=$(git describe --tags --match="v*")
@@ -64,6 +70,7 @@ jobs:
         run: |
           make install-prod
       - name: Publish package on PyPI
+        if: ${{ !inputs.dry_run && github.repository_owner == 'opendatahub-io' }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           verbose: true
