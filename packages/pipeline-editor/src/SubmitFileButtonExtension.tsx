@@ -147,7 +147,7 @@ export class SubmitFileButtonExtension<
       envObject,
       cpu,
       gpu,
-      memory,
+      memory
     );
 
     PipelineService.submitPipeline(

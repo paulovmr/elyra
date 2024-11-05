@@ -38,7 +38,7 @@ export default class Utils {
     envObject: { [key: string]: string },
     cpu?: number,
     gpu?: number,
-    memory?: number,
+    memory?: number
   ): any {
     const generated_uuid = uuid4();
 
