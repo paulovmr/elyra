@@ -49,6 +49,7 @@ import {
   Context
 } from '@jupyterlab/docregistry';
 import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
+import { Contents } from '@jupyterlab/services';
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 
 import 'carbon-components/css/carbon-components.min.css';
@@ -57,7 +58,13 @@ import { toArray } from '@lumino/algorithm';
 import { IDragEvent } from '@lumino/dragdrop';
 import { Signal } from '@lumino/signaling';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -85,6 +92,8 @@ import {
   IRuntimeData
 } from './runtime-utils';
 import { theme } from './theme';
+
+import { getEmptyPipelineJson } from './index';
 
 const PIPELINE_CLASS = 'elyra-PipelineEditor';
 
@@ -159,6 +168,7 @@ class PipelineEditorWidget extends ReactWidget {
   refreshPaletteSignal: Signal<this, any>;
   context: Context;
   settings: ISettingRegistry.ISettings;
+  defaultRuntimeType: string;
 
   constructor(options: any) {
     super();
@@ -169,11 +179,19 @@ class PipelineEditorWidget extends ReactWidget {
     this.refreshPaletteSignal = options.refreshPaletteSignal;
     this.context = options.context;
     this.settings = options.settings;
+    this.defaultRuntimeType = options.defaultRuntimeType;
     let nullPipeline = this.context.model.toJSON() === null;
+
     this.context.model.contentChanged.connect(() => {
       if (nullPipeline) {
         nullPipeline = false;
         this.update();
+      }
+    });
+    this.context.fileChanged.connect(() => {
+      if (this.context.model.toJSON() === null) {
+        const pipelineJson = getEmptyPipelineJson(this.defaultRuntimeType);
+        this.context.model.fromString(JSON.stringify(pipelineJson));
       }
     });
   }
@@ -234,11 +252,41 @@ const PipelineWrapper: React.FC<IProps> = ({
 
   const runtimeDisplayName = getDisplayName(runtimesSchema, type) ?? 'Generic';
 
+  const filePersistedRuntimeImages = useMemo(() => {
+    const images = [];
+    const pipelineDefaultRuntimeImage =
+      pipeline?.pipelines?.[0]?.app_data?.properties?.pipeline_defaults
+        ?.runtime_image;
+    if (pipelineDefaultRuntimeImage?.length > 0) {
+      images.push(pipelineDefaultRuntimeImage);
+    }
+    const nodes = pipeline?.pipelines?.[0]?.nodes;
+    if (nodes?.length > 0) {
+      for (const node of nodes) {
+        const nodeRuntimeImage =
+          node?.app_data?.component_parameters?.runtime_image;
+        if (nodeRuntimeImage?.length > 0) {
+          images.push(nodeRuntimeImage);
+        }
+      }
+    }
+
+    return images.map((imageName) => {
+      return {
+        name: imageName,
+        display_name: imageName,
+        metadata: {
+          image_name: imageName
+        }
+      };
+    });
+  }, [pipeline]);
+
   const {
     data: palette,
     error: paletteError,
     mutate: mutatePalette
-  } = usePalette(type);
+  } = usePalette(type, filePersistedRuntimeImages);
 
   useEffect(() => {
     const handleMutateSignal = (): void => {
@@ -476,17 +524,22 @@ const PipelineWrapper: React.FC<IProps> = ({
   );
 
   const onFileRequested = async (args: any): Promise<string[] | undefined> => {
-    const filename = PipelineService.getWorkspaceRelativeNodePath(
-      contextRef.current.path,
-      args.filename ?? ''
-    );
+    const pipelineFilePath = contextRef.current.path;
+    const contextFilePath = args.filename
+      ? PipelineService.getWorkspaceRelativeNodePath(
+          pipelineFilePath,
+          args.filename
+        )
+      : pipelineFilePath;
+    const contextFolderPath = PathExt.dirname(contextFilePath);
+
     if (args.propertyID?.includes('dependencies')) {
       const res = await showBrowseFileDialog(browserFactory.model.manager, {
         multiselect: true,
         includeDir: true,
-        rootPath: PathExt.dirname(filename),
+        rootPath: contextFolderPath,
         filter: (model: any): boolean => {
-          return model.path !== filename;
+          return model.path !== pipelineFilePath;
         }
       });
 
@@ -495,9 +548,9 @@ const PipelineWrapper: React.FC<IProps> = ({
       }
     } else {
       const res = await showBrowseFileDialog(browserFactory.model.manager, {
-        startPath: PathExt.dirname(filename),
-        filter: (model: any): boolean => {
-          if (args.filters?.File === undefined) {
+        startPath: contextFolderPath,
+        filter: (model: Contents.IModel): boolean => {
+          if (args.filters?.File === undefined || model.type === 'directory') {
             return true;
           }
 
@@ -1195,6 +1248,7 @@ export class PipelineEditorFactory extends ABCWidgetFactory<DocumentWidget> {
   addFileToPipelineSignal: Signal<this, any>;
   refreshPaletteSignal: Signal<this, any>;
   settings: ISettingRegistry.ISettings;
+  defaultRuntimeType: string;
 
   constructor(options: any) {
     super(options);
@@ -1204,6 +1258,7 @@ export class PipelineEditorFactory extends ABCWidgetFactory<DocumentWidget> {
     this.addFileToPipelineSignal = new Signal<this, any>(this);
     this.refreshPaletteSignal = new Signal<this, any>(this);
     this.settings = options.settings;
+    this.defaultRuntimeType = options.defaultRuntimeType;
   }
 
   protected createNewWidget(context: DocumentRegistry.Context): DocumentWidget {
@@ -1215,7 +1270,8 @@ export class PipelineEditorFactory extends ABCWidgetFactory<DocumentWidget> {
       context: context,
       addFileToPipelineSignal: this.addFileToPipelineSignal,
       refreshPaletteSignal: this.refreshPaletteSignal,
-      settings: this.settings
+      settings: this.settings,
+      defaultRuntimeType: this.defaultRuntimeType
     };
     const content = new PipelineEditorWidget(props);
 

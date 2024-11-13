@@ -73,7 +73,6 @@ export default class Utils {
                   cpu,
                   gpu,
                   memory,
-                  memory_limit,
                   include_subdirectories: false
                 },
                 ui_data: {

@@ -153,6 +153,7 @@ const extension: JupyterFrontEndPlugin<void> = {
       display_name: string;
       schemaspace: string;
       icon: string;
+      addLabel?: string;
     }): void => {
       const labIcon = LabIcon.resolve({ icon: args.icon });
       const widgetId = `${METADATA_WIDGET_ID}:${args.schemaspace}`;
@@ -160,7 +161,8 @@ const extension: JupyterFrontEndPlugin<void> = {
         app,
         display_name: args.display_name,
         schemaspace: args.schemaspace,
-        icon: labIcon
+        icon: labIcon,
+        addLabel: args.addLabel
       });
       metadataWidget.id = widgetId;
       metadataWidget.title.icon = labIcon;

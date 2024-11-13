@@ -84,7 +84,7 @@ uninstall:
 	$(PYTHON_PIP) uninstall -y python-lsp-server
 	$(PYTHON_PIP) uninstall -y jupyter-resource-usage
 	- jupyter labextension uninstall @jupyter-server/resource-usage
-	$(PYTHON_PIP) uninstall -y odh-elyra
+	$(PYTHON_PIP) uninstall -y elyra
 	- jupyter lab clean
 	# remove Kubeflow Pipelines example components
 	- $(PYTHON_PIP) uninstall -y elyra-examples-kfp-catalog
@@ -162,7 +162,7 @@ uninstall-server-package:
 	@$(PYTHON_PIP) uninstall elyra -y
 
 install-server-package: uninstall-server-package
-	$(PYTHON_PIP) install --upgrade --upgrade-strategy $(UPGRADE_STRATEGY) "$(shell find dist -name "odh_elyra-*-py3-none-any.whl")"
+	$(PYTHON_PIP) install --upgrade --upgrade-strategy $(UPGRADE_STRATEGY) "$(shell find dist -name "elyra-*-py3-none-any.whl")"
 
 install-server: build-dependencies lint-server build-server install-server-package ## Build and install backend
 
@@ -172,7 +172,7 @@ install-all: package-ui install-server install-examples install-gitlab-dependenc
 
 install-dev: package-ui-dev install-server install-examples install-gitlab-dependency check-install
 
-install-examples: ## Install example pipeline components 
+install-examples: ## Install example pipeline components
 	# install Kubeflow Pipelines example components
 	# -> https://github.com/elyra-ai/examples/tree/main/component-catalog-connectors/kfp-example-components-connector
 	- $(PYTHON_PIP) install --upgrade elyra-examples-kfp-catalog
